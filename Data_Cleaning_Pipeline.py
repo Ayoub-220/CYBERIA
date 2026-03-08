@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import os
 import re
+from fuzzywuzzy import fuzz
+from collections import defaultdict
 
 class ThreatActor_Cleaner:
     def __init__(self, json_file, actors_file, tools_file):
@@ -148,6 +150,43 @@ class ThreatActor_Cleaner:
         if not text: return ""
         return str(text).upper().replace("-", "").replace(" ", "").strip()
     
+    def fuzzy_match_actor(self, name, candidates, threshold=85):
+        """
+        Trouve le meilleur match avec fuzzy matching
+        
+        Returns:
+            (best_match_data, score, match_type, matched_name) ou (None, 0, None, None)
+        """
+        # 1. Essayer match exact d'abord
+        name_simple = self.simplify(name)
+        
+        for candidate_name, data in candidates:
+            if name_simple == self.simplify(candidate_name):
+                return data, 100, 'exact', candidate_name  
+        
+        # 2. Fuzzy matching
+        best_score = 0
+        best_match = None
+        best_candidate_name = None 
+        for candidate_name, data in candidates:
+            scores = [
+                fuzz.ratio(name, candidate_name),
+                fuzz.partial_ratio(name, candidate_name),
+                fuzz.token_set_ratio(name, candidate_name),
+            ]
+            
+            max_score = max(scores)
+            
+            if max_score > best_score:
+                best_score = max_score
+                best_match = data
+                best_candidate_name = candidate_name 
+        
+        if best_score >= threshold:
+            return best_match, best_score, 'fuzzy', best_candidate_name  
+        
+        return None, 0, None, None
+    
     def extract_mitre_ids(self, refs):
         """Extrait les IDs MITRE (Txxxx, Sxxxx, Gxxxx) depuis une liste d'URLs"""
         mitre_ids = []
@@ -163,7 +202,7 @@ class ThreatActor_Cleaner:
         return list(set(mitre_ids)) # Unicité
     
     def enrich_all(self):
-        """ÉTAPE 4: Enrichissement ThaiCERT + MITRE ATT&CK (Extraction via URLs)"""
+        """ÉTAPE 4: Enrichissement ThaiCERT + MITRE ATT&CK avec Fuzzy Matching"""
         print("\n📊 ÉTAPE 4: Enrichissement ThaiCERT + MITRE ATT&CK...")
         
         if not os.path.exists(self.actors_file) or not os.path.exists(self.tools_file):
@@ -175,60 +214,135 @@ class ThreatActor_Cleaner:
         with open(self.tools_file, 'r', encoding='utf-8') as f:
             tools_list = json.load(f)["values"]
 
-        # 1. Map des Acteurs TGC + Extraction MITRE depuis leurs propres refs
-        actors_map = {}
+    
+        # ÉTAPE 1: Préparer les candidats TGC avec tous les noms possibles
+    
+        print("\n   📋 Préparation des candidats TGC...")
+        tgc_candidates = []
+        
         for entry in actors_list:
-            meta = entry.get("meta", {})
-            # On extrait les IDs MITRE depuis les liens de l'acteur
+            # Nom principal
+            main_name = entry.get("value")
+            tgc_candidates.append((main_name, entry))
+            
+            # Synonymes
+            for syn in entry.get("meta", {}).get("synonyms", []):
+                tgc_candidates.append((syn, entry))
+        
+        print(f"   ✅ {len(tgc_candidates)} noms candidats créés (avec synonymes)")
+
+    
+        # ÉTAPE 2: Matcher chaque acteur avec fuzzy matching
+    
+        print(f"\n   🔍 Matching des acteurs avec fuzzy...")
+        
+        actors_map = {}
+        exact_matches = 0
+        fuzzy_matches = 0
+        no_matches = 0
+        
+        for actor in self.data_clean:
+            actor_name = actor.get("value")
+            
+            # Utiliser fuzzy matching
+            match_data, score, match_type, matched_name = self.fuzzy_match_actor(
+                actor_name, 
+                tgc_candidates,
+                threshold=95
+            )
+            
+            if not match_data:
+                no_matches += 1
+                continue
+            
+            # Stats pour le matching
+            if match_type == "exact":
+                exact_matches += 1
+            elif match_type == "fuzzy":
+                fuzzy_matches += 1
+                if fuzzy_matches == 1:
+                    print(f"\n      {'Source':<30} {'Match TGC':<45} {'Score':>6}")
+                    print(f"      {'-'*30} {'-'*45} {'-'*6}")
+                print(f"      {actor_name:<30} {matched_name:<45} {score:>6}")
+            
+            # Extraire infos TGC
+            meta = match_data.get("meta", {})
             initial_mitre = self.extract_mitre_ids(meta.get("refs", []))
             
             info = {
-                "uuid": entry.get("uuid"),
+                "uuid": match_data.get("uuid"),
                 "motivation": meta.get("motivation", []),
                 "targets": meta.get("cfr-target-category", []),
                 "tools": [],
-                "mitre_techniques": initial_mitre 
+                "mitre_techniques": initial_mitre
             }
-            actors_map[self.simplify(entry.get("value"))] = info
-            for syn in meta.get("synonyms", []):
-                actors_map[self.simplify(syn)] = info
+            
+            # Stocker dans actors_map avec la clé simplifiée
+            key = self.simplify(actor_name)
+            actors_map[key] = info
+        
+        print(f"\n   ✅ RÉSULTATS DU MATCHING:")
+        print(f"      • Matches exacts:  {exact_matches}")
+        print(f"      • Matches fuzzy:   {fuzzy_matches}")
+        print(f"      • Non matchés:     {no_matches}")
+        print(f"      • TOTAL enrichis:  {exact_matches + fuzzy_matches}/{len(self.data_clean)} ({(exact_matches + fuzzy_matches)/len(self.data_clean)*100:.1f}%)")
 
-        # 2. Map des Outils + Extraction MITRE depuis les refs des outils
+        # ÉTAPE 3: Enrichir avec les outils
+        
+        print(f"\n   🔧 Enrichissement avec les outils...")
+        
+        tools_added = 0
+        
         for tool in tools_list:
             tool_name = tool.get("value")
             tool_meta = tool.get("meta", {})
-            # On extrait les IDs MITRE depuis les liens de l'outil
+            
+            # Extraire les IDs MITRE depuis les liens de l'outil
             tool_mitre_ids = self.extract_mitre_ids(tool_meta.get("refs", []))
-            # On ajoute aussi les IDs s'ils sont déjà présents dans le champ 'mitre-attack'
+            # Ajouter aussi les IDs déjà présents dans 'mitre-attack'
             tool_mitre_ids.extend(tool_meta.get("mitre-attack", []))
             
+            # Pour chaque relation "used-by"
             for rel in tool.get("related", []):
                 if rel.get("type") == "used-by":
                     dest_uuid = rel.get("dest-uuid")
+                    
+                    # Trouver l'acteur correspondant dans actors_map
                     for act_info in actors_map.values():
                         if act_info["uuid"] == dest_uuid:
                             act_info["tools"].append(tool_name)
                             act_info["mitre_techniques"].extend(tool_mitre_ids)
+                            tools_added += 1
+        
+        print(f"   ✅ {tools_added} relations outils ajoutées")
 
-        # 3. Application finale au jeu de données source
-        match_count = 0
+    
+        # ÉTAPE 4: Application finale aux données
+    
+        print(f"\n   💾 Application des enrichissements...")
+        
+        final_enriched = 0
+        
         for actor in self.data_clean:
             key = self.simplify(actor.get("value"))
+            
             if key in actors_map:
                 match = actors_map[key]
-                if "meta" not in actor: actor["meta"] = {}
+                if "meta" not in actor:
+                    actor["meta"] = {}
                 
+                # Ajouter les données enrichies
                 actor["meta"]["cti_motivation"] = match["motivation"]
                 actor["meta"]["cti_targets"] = match["targets"]
                 actor["meta"]["cti_tools"] = list(set(match["tools"]))
-                # On nettoie la liste MITRE finale pour éviter les doublons
+                # Nettoyer la liste MITRE finale pour éviter les doublons
                 actor["meta"]["mitre_techniques"] = list(set(match["mitre_techniques"]))
-                match_count += 1
+                
+                final_enriched += 1
+        
+        print(f"   ✅ {final_enriched} acteurs enrichis avec succès")
+        print(f"\n✅ Enrichissement terminé!")
 
-        print(f"✅ {match_count} acteurs enrichis avec succès (Données + MITRE).")
-    
-    
-    
     
     
     def save_cleaned_data(self, output_file='threat-actor-cleaned.json'):
@@ -242,7 +356,7 @@ class ThreatActor_Cleaner:
         
         print(f"✅ {len(self.data_clean)} acteurs sauvegardés!")
         
-    #  
+          
     def run(self):
         """Pipeline"""
         self.load_data()
@@ -253,7 +367,6 @@ class ThreatActor_Cleaner:
         self.enrich_all()
         self.save_cleaned_data()
         print("\n✅ Pipeline terminé!")
-
 
 if __name__ == "__main__":
     cleaner = ThreatActor_Cleaner('threat-actor.json', 'tgc-actors.json', 'tgc-tools.json')
