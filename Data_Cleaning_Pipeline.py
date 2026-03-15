@@ -150,6 +150,28 @@ class ThreatActor_Cleaner:
         if not text: return ""
         return str(text).upper().replace("-", "").replace(" ", "").strip()
     
+    def extract_temporal_data(self):
+        """Extraction de la chronologie avec gestion d'erreurs"""
+        print("\n📅 ÉTAPE 5: Extraction des données temporelles...")
+        changes = 0
+        for actor in self.data_clean:
+            # On récupère la date transmise par l'enrichissement
+            created_date = actor.get('created')
+            
+            if created_date and isinstance(created_date, str):
+                # On utilise une regex pour trouver les 4 chiffres de l'année 
+                # (plus sûr que created_date[:4] si le format change)
+                match = re.search(r'(\d{4})', created_date)
+                if match:
+                    actor['year_created'] = match.group(1)
+                    changes += 1
+                else:
+                    actor['year_created'] = "Unknown"
+            else:
+                actor['year_created'] = "Unknown"
+        
+        print(f"✅ {changes} dates de création extraites sur les {len(self.data_clean)} acteurs.")
+    
     def fuzzy_match_actor(self, name, candidates, threshold=85):
         """
         Trouve le meilleur match avec fuzzy matching
@@ -269,12 +291,15 @@ class ThreatActor_Cleaner:
             meta = match_data.get("meta", {})
             initial_mitre = self.extract_mitre_ids(meta.get("refs", []))
             
+            potential_date = meta.get("date")
+            
             info = {
                 "uuid": match_data.get("uuid"),
                 "motivation": meta.get("motivation", []),
                 "targets": meta.get("cfr-target-category", []),
                 "tools": [],
-                "mitre_techniques": initial_mitre
+                "mitre_techniques": initial_mitre,
+                "created": str(potential_date) if potential_date else None
             }
             
             # Stocker dans actors_map avec la clé simplifiée
@@ -337,11 +362,20 @@ class ThreatActor_Cleaner:
                 actor["meta"]["cti_tools"] = list(set(match["tools"]))
                 # Nettoyer la liste MITRE finale pour éviter les doublons
                 actor["meta"]["mitre_techniques"] = list(set(match["mitre_techniques"]))
+                actor["created"] = match["created"]
+                if final_enriched == 1:
+                    print(f"   🔍 DEBUG : Exemple de date récupérée : {actor['created']}")
+                
+                if actor["created"]:
+                    # print(f"DEBUG: Date trouvée pour {actor.get('value')}") 
+                    pass
                 
                 final_enriched += 1
         
         print(f"   ✅ {final_enriched} acteurs enrichis avec succès")
         print(f"\n✅ Enrichissement terminé!")
+        
+
 
     
     
@@ -365,6 +399,7 @@ class ThreatActor_Cleaner:
         self.add_short_sponsor_names()
         self.remove_duplicates_in_lists()
         self.enrich_all()
+        self.extract_temporal_data()
         self.save_cleaned_data()
         print("\n✅ Pipeline terminé!")
 
