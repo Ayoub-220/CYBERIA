@@ -1,0 +1,159 @@
+"""
+CAH 1 — Clustering par comportement opérationnel
+Projet CYBERIA / TER - Threat Actor Encyclopedia
+Champs : cti_tools + cti_targets + mitre_techniques
+"""
+
+import json
+import numpy as np
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import seaborn as sns
+from sklearn.preprocessing import MultiLabelBinarizer
+from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+from scipy.spatial.distance import pdist
+from collections import Counter
+
+# ── 1. CHARGEMENT ─────────────────────────────────────────────────────────────
+with open('threat-actor-cleaned.json') as f:
+    data = json.load(f)
+
+# ── 2. FILTRAGE (acteurs avec les 3 champs complets) ──────────────────────────
+actors = []
+for a in data:
+    meta = a.get('meta', {})
+    if meta.get('cti_tools') and meta.get('cti_targets') and meta.get('mitre_techniques'):
+        actors.append({
+            'name': a['value'],
+            'country': meta.get('country', 'Unknown'),
+            'motivation': meta.get('cti_motivation', []),
+            'tools': meta.get('cti_tools', []),
+            'targets': meta.get('cti_targets', []),
+            'techniques': meta.get('mitre_techniques', []),
+        })
+print(f"Acteurs retenus : {len(actors)}")
+
+# ── 3. VECTORISATION BINAIRE ──────────────────────────────────────────────────
+mlb_tools      = MultiLabelBinarizer()
+mlb_targets    = MultiLabelBinarizer()
+mlb_techniques = MultiLabelBinarizer()
+
+X_tools      = mlb_tools.fit_transform([a['tools']      for a in actors])
+X_targets    = mlb_targets.fit_transform([a['targets']    for a in actors])
+X_techniques = mlb_techniques.fit_transform([a['techniques'] for a in actors])
+
+X = np.hstack([X_tools, X_targets, X_techniques])
+print(f"Matrice : {X.shape}")
+
+# ── 4. CAH (distance Jaccard + linkage Ward) ──────────────────────────────────
+dist = pdist(X, metric='jaccard')
+Z    = linkage(dist, method='ward')
+
+# ── 5. CHOIX DU NOMBRE DE CLUSTERS ───────────────────────────────────────────
+# Méthode du saut d'inertie
+last         = Z[-20:, 2]
+acceleration = np.diff(last, 2)
+k_auto       = acceleration.argmax() + 2
+print(f"k optimal suggéré : {k_auto}")
+k = 5  # choix final (modifiable)
+
+labels = fcluster(Z, k, criterion='maxclust')
+for a, lab in zip(actors, labels):
+    a['cluster'] = int(lab)
+
+# ── 6. PROFIL DES CLUSTERS ────────────────────────────────────────────────────
+print("\n=== PROFIL DES CLUSTERS ===")
+for c in range(1, k+1):
+    members = [a for a in actors if a['cluster'] == c]
+    print(f"\nCluster {c} ({len(members)} acteurs) :")
+    countries = Counter([a['country'] for a in members if a['country'] != 'Unknown'])
+    motivs    = Counter([m for a in members for m in a['motivation']])
+    tgts      = Counter([t for a in members for t in a['targets']])
+    tools     = Counter([t for a in members for t in a['tools']])
+    print(f"  Pays        : {countries.most_common(3)}")
+    print(f"  Motivations : {motivs.most_common(3)}")
+    print(f"  Cibles      : {tgts.most_common(3)}")
+    print(f"  Outils      : {tools.most_common(3)}")
+
+# Export CSV
+rows = []
+for a in actors:
+    rows.append({'name': a['name'], 'country': a['country'], 'cluster': a['cluster']})
+pd.DataFrame(rows).to_csv('resultat/cah1_results.csv', index=False)
+print("\nRésultats exportés dans cah1_results.csv")
+
+# ── 7. VISUALISATION ──────────────────────────────────────────────────────────
+cluster_colors = {1: '#E74C3C', 2: '#3498DB', 3: '#9B59B6', 4: '#F39C12', 5: '#2ECC71'}
+cluster_labels = {
+    1: 'Espionnage CN – Cobalt Strike',
+    2: 'Espionnage CN – Classique (PlugX)',
+    3: 'RPDC – Multi-objectif',
+    4: 'RPDC – Espionnage ciblé',
+    5: 'Groupe mixte global',
+}
+
+fig, axes = plt.subplots(2, 2, figsize=(22, 18))
+fig.patch.set_facecolor('#0F1923')
+
+# dendrogramme
+ax1 = axes[0, 0]; ax1.set_facecolor('#0F1923')
+dendrogram(Z, ax=ax1, truncate_mode='lastp', p=40, show_leaf_counts=True,
+           leaf_rotation=90, color_threshold=Z[-k+1, 2],
+           above_threshold_color='#555555')
+cut_height = (Z[-k, 2] + Z[-k+1, 2]) / 2
+ax1.axhline(y=cut_height, color='#E74C3C', linestyle='--', linewidth=1.5, label=f'Coupe k={k}')
+ax1.legend(facecolor='#1A2535', labelcolor='white', fontsize=9)
+ax1.set_title('Dendrogramme CAH — Top 40 nœuds', color='white', fontsize=13, fontweight='bold')
+ax1.set_xlabel('Acteurs', color='#AAAAAA'); ax1.set_ylabel('Distance de Ward', color='#AAAAAA')
+ax1.tick_params(colors='#AAAAAA', labelsize=7)
+
+# taille des clusters
+ax2 = axes[0, 1]; ax2.set_facecolor('#0F1923')
+sizes = Counter(labels)
+ax2.bar([cluster_labels[c] for c in sorted(sizes)],
+        [sizes[c] for c in sorted(sizes)],
+        color=[cluster_colors[c] for c in sorted(sizes)], edgecolor='white')
+ax2.set_title('Taille des clusters', color='white', fontsize=13, fontweight='bold')
+ax2.tick_params(colors='#AAAAAA', labelsize=8)
+ax2.set_xticklabels([cluster_labels[c] for c in sorted(sizes)], rotation=15, ha='right')
+
+# heatmap pays × cluster
+ax3 = axes[1, 0]; ax3.set_facecolor('#0F1923')
+top_countries = [c[0] for c in Counter([a['country'] for a in actors if a['country'] != 'Unknown']).most_common(8)]
+hm_pays = np.zeros((len(top_countries), k))
+for a in actors:
+    if a['country'] in top_countries:
+        hm_pays[top_countries.index(a['country'])][a['cluster']-1] += 1
+sns.heatmap(hm_pays, ax=ax3, xticklabels=[f'C{i+1}' for i in range(k)],
+            yticklabels=top_countries, cmap='YlOrRd', annot=True, fmt='.0f',
+            linewidths=0.5, linecolor='#333333')
+ax3.set_title('Distribution pays × cluster', color='white', fontsize=13, fontweight='bold')
+ax3.tick_params(colors='#AAAAAA')
+
+# heatmap motivation × cluster
+ax4 = axes[1, 1]; ax4.set_facecolor('#0F1923')
+all_motivs  = ['Information theft and espionage', 'Financial gain', 'Financial crime', 'Sabotage and destruction']
+motiv_short = ['Espionnage', 'Gain financier', 'Crime financier', 'Sabotage']
+hm_mot = np.zeros((len(all_motivs), k))
+for a in actors:
+    for mi, m in enumerate(all_motivs):
+        if m in a.get('motivation', []):
+            hm_mot[mi][a['cluster']-1] += 1
+sns.heatmap(hm_mot, ax=ax4, xticklabels=[f'C{i+1}' for i in range(k)],
+            yticklabels=motiv_short, cmap='Blues', annot=True, fmt='.0f',
+            linewidths=0.5, linecolor='#333333')
+ax4.set_title('Motivations × cluster', color='white', fontsize=13, fontweight='bold')
+ax4.tick_params(colors='#AAAAAA')
+
+patches = [mpatches.Patch(color=cluster_colors[c], label=f'C{c} – {cluster_labels[c]}') for c in range(1, k+1)]
+fig.legend(handles=patches, loc='lower center', ncol=3, facecolor='#1A2535',
+           labelcolor='white', fontsize=9, bbox_to_anchor=(0.5, -0.03))
+fig.suptitle('CAH — Clustering par comportement opérationnel\n(outils + cibles + techniques MITRE)',
+             color='white', fontsize=15, fontweight='bold', y=1.01)
+
+plt.tight_layout()
+plt.savefig('resultat/cah_comportement.png', dpi=150, bbox_inches='tight', facecolor='#0F1923')
+print("Figure sauvegardée : cah_comportement.png")

@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""
+CAH 2 — Clustering par profil géopolitique
+Projet CYBERIA / TER - Threat Actor Encyclopedia
+Champs : country + cti_motivation + cti_targets + cfr-type-of-incident + cfr-target-category
+"""
+
+import json
+import numpy as np
+import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import seaborn as sns
+from sklearn.preprocessing import MultiLabelBinarizer
+from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
+from scipy.spatial.distance import pdist
+from collections import Counter
+
+# ── 1. CHARGEMENT ─────────────────────────────────────────────────────────────
+with open('threat-actor-cleaned.json', encoding='utf-8') as f:
+    data = json.load(f)
+
+# ── 2. FILTRAGE (acteurs avec pays + motivation) ───────────────────────────────
+actors = []
+for a in data:
+    meta = a.get('meta', {})
+    country = meta.get('country')
+    motivation = meta.get('cti_motivation', [])
+    if country and motivation:
+        # cfr-type-of-incident est une string → conversion en liste
+        inc = meta.get('cfr-type-of-incident')
+        incident = [inc] if isinstance(inc, str) else []
+        # cfr-target-category peut être liste ou string
+        cat = meta.get('cfr-target-category', [])
+        target_cat = cat if isinstance(cat, list) else ([cat] if cat else [])
+
+        actors.append({
+            'name': a['value'],
+            'country': country,
+            'motivation': motivation,
+            'targets': meta.get('cti_targets', []),
+            'incident': incident,
+            'target_cat': target_cat,
+            'year': a.get('year_created', 'Unknown'),
+        })
+
+print(f"Acteurs retenus : {len(actors)}")
+
+# ── 3. VECTORISATION ──────────────────────────────────────────────────────────
+# Pays → one-hot
+all_countries = sorted(set(a['country'] for a in actors))
+country_matrix = np.zeros((len(actors), len(all_countries)))
+for i, a in enumerate(actors):
+    country_matrix[i][all_countries.index(a['country'])] = 1
+
+# Motivation → binaire
+mlb_mot = MultiLabelBinarizer()
+X_mot = mlb_mot.fit_transform([a['motivation'] for a in actors])
+
+# Secteurs ciblés → binaire
+mlb_tgt = MultiLabelBinarizer()
+X_tgt = mlb_tgt.fit_transform([a['targets'] for a in actors])
+
+# Type d'incident → binaire
+mlb_inc = MultiLabelBinarizer()
+X_inc = mlb_inc.fit_transform([a['incident'] for a in actors])
+
+# Catégorie de cible → binaire
+mlb_cat = MultiLabelBinarizer()
+X_cat = mlb_cat.fit_transform([a['target_cat'] for a in actors])
+
+# Pondération : pays ×2, motivation ×3, reste ×1
+# La motivation est le critère géopolitique le plus discriminant
+X = np.hstack([
+    country_matrix * 2,
+    X_mot * 3,
+    X_tgt,
+    X_inc,
+    X_cat
+])
+print(f"Matrice finale : {X.shape}")
+
+# ── 4. CAH (distance Jaccard + linkage Ward) ──────────────────────────────────
+dist = pdist(X, metric='jaccard')
+Z    = linkage(dist, method='ward')
+
+# ── 5. CHOIX DU NOMBRE DE CLUSTERS ───────────────────────────────────────────
+# Méthode du saut d'inertie
+last  = Z[-20:, 2]
+accel = np.diff(last, 2)
+k_auto = accel.argmax() + 2
+print(f"k optimal suggéré : {k_auto}")
+k = 6  # choix final (modifiable)
+
+labels = fcluster(Z, k, criterion='maxclust')
+for a, lab in zip(actors, labels):
+    a['cluster'] = int(lab)
+
+# ── 6. PROFIL DES CLUSTERS ────────────────────────────────────────────────────
+print("\n=== PROFIL DES CLUSTERS ===")
+summary = []
+for c in range(1, k + 1):
+    members = [a for a in actors if a['cluster'] == c]
+    countries = Counter([a['country'] for a in members])
+    motivs    = Counter([m for a in members for m in a['motivation']])
+    tgts      = Counter([t for a in members for t in a['targets']])
+    print(f"\nCluster {c} ({len(members)} acteurs) :")
+    print(f"  Pays        : {countries.most_common(4)}")
+    print(f"  Motivations : {motivs.most_common(3)}")
+    print(f"  Cibles      : {tgts.most_common(3)}")
+    summary.append({
+        'Cluster': c,
+        'Effectif': len(members),
+        'Top pays': ", ".join([f"{k_}({v})" for k_, v in countries.most_common(3)]),
+        'Top motivations': ", ".join([k_ for k_, _ in motivs.most_common(2)]),
+        'Top cibles': ", ".join([k_ for k_, _ in tgts.most_common(3)]),
+        'Exemples': ", ".join([a['name'] for a in members[:3]]),
+    })
+
+# Export CSV
+pd.DataFrame(summary).to_csv('resultat/cah2_results.csv', index=False, encoding='utf-8')
+print("\nRésultats exportés dans cah2_results.csv")
+
+# ── 7. VISUALISATION ──────────────────────────────────────────────────────────
+cluster_colors = {
+    1: '#E74C3C',
+    2: '#3498DB',
+    3: '#2ECC71',
+    4: '#F39C12',
+    5: '#9B59B6',
+    6: '#1ABC9C',
+}
+cluster_labels_text = {
+    1: 'Espionnage CN – Telcoms/Energie',
+    2: 'Espionnage CN/RU – Gouvernement',
+    3: 'Bloc mixte – Multi-secteurs',
+    4: 'Espionnage CN – Defense/Gouv.',
+    5: 'Crime financier RU/RPDC',
+    6: 'Sabotage/Espionnage IR',
+}
+
+BG = '#0F1923'
+fig, axes = plt.subplots(2, 2, figsize=(22, 18))
+fig.patch.set_facecolor(BG)
+
+# Dendrogramme
+ax1 = axes[0, 0]
+ax1.set_facecolor(BG)
+cut_height = (Z[-k, 2] + Z[-k + 1, 2]) / 2
+dendrogram(Z, ax=ax1, truncate_mode='lastp', p=40, show_leaf_counts=True,
+           leaf_rotation=90, color_threshold=cut_height,
+           above_threshold_color='#555555')
+ax1.axhline(y=cut_height, color='#E74C3C', linestyle='--', linewidth=1.5, label=f'Coupe k={k}')
+ax1.set_title('Dendrogramme CAH 2 — Profil geopolitique', color='white', fontsize=13, fontweight='bold')
+ax1.set_xlabel('Acteurs', color='#AAAAAA')
+ax1.set_ylabel('Distance de Ward', color='#AAAAAA')
+ax1.tick_params(colors='#AAAAAA', labelsize=7)
+ax1.legend(facecolor='#1A2535', labelcolor='white', fontsize=9)
+for sp in ax1.spines.values():
+    sp.set_edgecolor('#333333')
+
+# Taille des clusters
+ax2 = axes[0, 1]
+ax2.set_facecolor(BG)
+sizes = Counter(labels)
+bars = ax2.bar(
+    [f'C{c}' for c in sorted(sizes)],
+    [sizes[c] for c in sorted(sizes)],
+    color=[cluster_colors[c] for c in sorted(sizes)],
+    edgecolor='white', linewidth=0.5
+)
+for bar, (c, sz) in zip(bars, sorted(sizes.items())):
+    ax2.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.5,
+             str(sz), ha='center', va='bottom', color='white', fontsize=11, fontweight='bold')
+ax2.set_title('Taille des clusters', color='white', fontsize=13, fontweight='bold')
+ax2.tick_params(colors='#AAAAAA')
+for sp in ax2.spines.values():
+    sp.set_edgecolor('#333333')
+
+# Heatmap pays x cluster
+ax3 = axes[1, 0]
+top_countries = [c for c, _ in Counter([a['country'] for a in actors]).most_common(8)]
+hm_pays = np.zeros((len(top_countries), k))
+for a in actors:
+    if a['country'] in top_countries:
+        hm_pays[top_countries.index(a['country'])][a['cluster'] - 1] += 1
+
+sns.heatmap(hm_pays, ax=ax3,
+            xticklabels=[f'C{i + 1}' for i in range(k)],
+            yticklabels=top_countries,
+            cmap='YlOrRd', annot=True, fmt='.0f',
+            linewidths=0.5, linecolor='#333333',
+            cbar_kws={'label': "Nb d'acteurs"})
+ax3.set_title('Distribution pays x cluster', color='white', fontsize=13, fontweight='bold')
+ax3.tick_params(colors='#AAAAAA')
+
+# Heatmap motivation x cluster
+ax4 = axes[1, 1]
+all_motivs  = ['Information theft and espionage', 'Financial gain',
+               'Financial crime', 'Sabotage and destruction']
+motiv_short = ['Espionnage', 'Gain financier', 'Crime financier', 'Sabotage']
+hm_mot = np.zeros((len(all_motivs), k))
+for a in actors:
+    for mi, m in enumerate(all_motivs):
+        if m in a.get('motivation', []):
+            hm_mot[mi][a['cluster'] - 1] += 1
+
+sns.heatmap(hm_mot, ax=ax4,
+            xticklabels=[f'C{i + 1}' for i in range(k)],
+            yticklabels=motiv_short,
+            cmap='Blues', annot=True, fmt='.0f',
+            linewidths=0.5, linecolor='#333333',
+            cbar_kws={'label': "Nb d'acteurs"})
+ax4.set_title('Motivations x cluster', color='white', fontsize=13, fontweight='bold')
+ax4.tick_params(colors='#AAAAAA')
+
+# Legende globale
+patches = [mpatches.Patch(color=cluster_colors[c], label=f'C{c} - {cluster_labels_text[c]}')
+           for c in range(1, k + 1)]
+fig.legend(handles=patches, loc='lower center', ncol=3, facecolor='#1A2535',
+           labelcolor='white', fontsize=9, framealpha=0.9,
+           bbox_to_anchor=(0.5, -0.04))
+
+fig.suptitle("CAH 2 — Clustering par profil geopolitique\n"
+             "(Pays + Motivations + Secteurs cibles + Type d'incident)",
+             color='white', fontsize=15, fontweight='bold', y=1.01)
+
+plt.tight_layout()
+plt.savefig('resultat/cah2_geopolitique.png', dpi=150, bbox_inches='tight', facecolor=BG)
+print("Figure sauvegardee : cah2_geopolitique.png")
