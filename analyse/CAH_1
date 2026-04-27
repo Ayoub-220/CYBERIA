@@ -120,40 +120,21 @@ ax2.set_title('Taille des clusters', color='white', fontsize=13, fontweight='bol
 ax2.tick_params(colors='#AAAAAA', labelsize=8)
 ax2.set_xticklabels([cluster_labels[c] for c in sorted(sizes)], rotation=15, ha='right')
 
-# heatmap pays × cluster
-ax3 = axes[1, 0]; ax3.set_facecolor('#0F1923')
-top_countries = [c[0] for c in Counter([a['country'] for a in actors if a['country'] != 'Unknown']).most_common(8)]
-hm_pays = np.zeros((len(top_countries), k))
-for a in actors:
-    if a['country'] in top_countries:
-        hm_pays[top_countries.index(a['country'])][a['cluster']-1] += 1
-sns.heatmap(hm_pays, ax=ax3, xticklabels=[f'C{i+1}' for i in range(k)],
-            yticklabels=top_countries, cmap='YlOrRd', annot=True, fmt='.0f',
-            linewidths=0.5, linecolor='#333333')
-ax3.set_title('Distribution pays × cluster', color='white', fontsize=13, fontweight='bold')
-ax3.tick_params(colors='#AAAAAA')
 
-# heatmap motivation × cluster
-ax4 = axes[1, 1]; ax4.set_facecolor('#0F1923')
-all_motivs  = ['Information theft and espionage', 'Financial gain', 'Financial crime', 'Sabotage and destruction']
-motiv_short = ['Espionnage', 'Gain financier', 'Crime financier', 'Sabotage']
-hm_mot = np.zeros((len(all_motivs), k))
-for a in actors:
-    for mi, m in enumerate(all_motivs):
-        if m in a.get('motivation', []):
-            hm_mot[mi][a['cluster']-1] += 1
-sns.heatmap(hm_mot, ax=ax4, xticklabels=[f'C{i+1}' for i in range(k)],
-            yticklabels=motiv_short, cmap='Blues', annot=True, fmt='.0f',
-            linewidths=0.5, linecolor='#333333')
-ax4.set_title('Motivations × cluster', color='white', fontsize=13, fontweight='bold')
-ax4.tick_params(colors='#AAAAAA')
-
-patches = [mpatches.Patch(color=cluster_colors[c], label=f'C{c} – {cluster_labels[c]}') for c in range(1, k+1)]
-fig.legend(handles=patches, loc='lower center', ncol=3, facecolor='#1A2535',
-           labelcolor='white', fontsize=9, bbox_to_anchor=(0.5, -0.03))
-fig.suptitle('CAH — Clustering par comportement opérationnel\n(outils + cibles + techniques MITRE)',
-             color='white', fontsize=15, fontweight='bold', y=1.01)
 
 plt.tight_layout()
 plt.savefig('resultat/cah_comportement.png', dpi=150, bbox_inches='tight', facecolor='#0F1923')
 print("Figure sauvegardée : cah_comportement.png")
+
+'''
+C1 — Espionnage CN, Cobalt Strike (35 acteurs)
+Acteurs chinois qui utilisent massivement Cobalt Strike comme outil principal. Ciblent gouvernements et télécoms. Profil APT moderne.
+C2 — Espionnage CN classique / PlugX (74 acteurs)
+Le plus grand cluster chinois. Utilisent PlugX et Poison Ivy, outils historiques de l'espionnage chinois. Cibles : gouvernement, défense, médias.
+C3 — Corée du Nord multi-objectif (6 acteurs)
+Petit groupe RPDC très spécifique : espionnage + sabotage + crime financier simultanément. Outils très particuliers (Rifdoor, Jokra). Profil unique.
+C4 — Corée du Nord espionnage ciblé (6 acteurs)
+Autre sous-groupe RPDC focalisé uniquement sur l'espionnage défense/énergie. Outils distincts de C3.
+C5 — Groupe mixte global (154 acteurs)
+Le cluster "fourre-tout" des acteurs moins bien caractérisés : mix Chine, Russie, Iran. Utilisent Mimikatz et Cobalt Strike. Le plus hétérogène.
+'''

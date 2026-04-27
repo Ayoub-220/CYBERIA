@@ -23,6 +23,7 @@ Réunions:
 
 
 Documentation:
+
 1.1 Data_Cleaning_Pipeline.py:
 Le fichier définit une classe appelée ThreatActor_Cleaner dont l’objectif est de nettoyer, normaliser et enrichir des données concernant des acteurs de cybermenaces (threat actors). Le programme fonctionne comme un pipeline de traitement de données : il charge un fichier JSON contenant des acteurs, nettoie les informations, supprime les incohérences, enrichit les données à partir de plusieurs sources externes (ThaiCERT, MITRE ATT&CK et MISP Galaxy), puis sauvegarde un nouveau fichier JSON enrichi.
 Le pipeline permet donc de transformer des données brutes en un dataset structuré et enrichi utilisable pour de l’analyse en Cybersécurité.

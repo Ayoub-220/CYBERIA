@@ -1,4 +1,5 @@
 import json
+import requests
 import pandas as pd
 import numpy as np
 import os
@@ -374,11 +375,146 @@ class ThreatActor_Cleaner:
         
         print(f"   ✅ {final_enriched} acteurs enrichis avec succès")
         print(f"\n✅ Enrichissement terminé!")
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ÉTAPE 6 — ENRICHISSEMENT MITRE ATT&CK ONLINE (depuis enrichissement.py)
+    # Télécharge la base MITRE ATT&CK complète depuis GitHub et résout
+    # chaque code mitre_techniques en nom lisible + tactiques ATT&CK.
+    # Résultat stocké dans meta['mitre_techniques_resolved']
+    # ══════════════════════════════════════════════════════════════════════════
+    def fetch_mitre_mapping(self):
+        """Télécharge la base MITRE ATT&CK (Techniques et Outils) depuis GitHub"""
+        print("\n🌐 ÉTAPE 6 [1/2] Connexion à MITRE ATT&CK...")
+        url = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"
+        mapping = {}
+        try:
+            response = requests.get(url, timeout=20)
+            if response.status_code == 200:
+                data = response.json()
+                for obj in data.get('objects', []):
+                    if obj.get('type') in ['attack-pattern', 'malware', 'tool']:
+                        for ref in obj.get('external_references', []):
+                            if ref.get('source_name') == 'mitre-attack':
+                                mitre_id = ref.get('external_id')
+                                name = obj.get('name', 'Unknown')
+                                # On récupère les phases de l'attaque (ex: Persistence)
+                                phases = [p.get('phase_name') for p in obj.get('kill_chain_phases', [])]
+                                phase_str = f" [{', '.join(phases)}]" if phases else ""
+                                mapping[mitre_id] = f"{name}{phase_str} ({mitre_id})"
+                print(f"   ✅ {len(mapping)} définitions techniques chargées.")
+            else:
+                print(f"   ⚠️  Réponse inattendue : HTTP {response.status_code}")
+        except Exception as e:
+            print(f"   ❌ Erreur MITRE (pas de connexion ?) : {e}")
+            print("   ℹ️  L'étape 6 sera ignorée, les autres étapes ne sont pas affectées.")
+        return mapping
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ÉTAPE 6 — ENRICHISSEMENT MISP GALAXY (depuis enrichissement.py)
+    # Télécharge le cluster MISP threat-actor et indexe tous les noms +
+    # synonymes pour retrouver first_seen / last_seen de chaque acteur.
+    # Corrige aussi les year_created = 'Unknown' quand une date MISP existe.
+    # ══════════════════════════════════════════════════════════════════════════
+    def fetch_misp_galaxy(self):
+        """Télécharge et indexe TOUS les noms (principaux + synonymes) de MISP"""
+        print("\n🌐 ÉTAPE 6 [2/2] Connexion à MISP (Galaxies)...")
+        url = "https://raw.githubusercontent.com/MISP/misp-galaxy/main/clusters/threat-actor.json"
+        lookup = {}
+        try:
+            response = requests.get(url, timeout=15)
+            if response.status_code == 200:
+                data = response.json()
+                for entry in data.get('values', []):
+                    main_name = entry.get('value', '')
+                    meta = entry.get('meta', {})
+                    
+                    info = {
+                        'first_seen': meta.get('first_seen', 'Unknown'),
+                        'last_seen':  meta.get('last_seen',  'Unknown'),
+                        'main_name':  main_name
+                    }
+                    
+                    # Indexation du nom principal
+                    lookup[main_name.lower().strip()] = info
+                    
+                    # Indexation de tous les synonymes
+                    synonyms = meta.get('synonyms', [])
+                    if isinstance(synonyms, list):
+                        for syn in synonyms:
+                            lookup[syn.lower().strip()] = info
+                
+                print(f"   ✅ {len(lookup)} variantes de noms chargées via MISP.")
+            else:
+                print(f"   ⚠️  Réponse inattendue : HTTP {response.status_code}")
+        except Exception as e:
+            print(f"   ❌ Erreur MISP (pas de connexion ?) : {e}")
+            print("   ℹ️  L'étape 6 sera ignorée, les autres étapes ne sont pas affectées.")
+        return lookup
+
+    def enrich_from_external_sources(self):
+        """
+        ÉTAPE 6: Enrichissement depuis des sources externes (MITRE ATT&CK + MISP)
         
+        Apports :
+          - mitre_techniques_resolved : codes MITRE résolus en noms lisibles + tactiques
+          - first_seen_misp / last_seen_misp : dates d'activité depuis MISP Galaxy
+          - misp_main_name : nom canonique MISP de l'acteur
+          - year_created : corrigé si encore 'Unknown' et qu'une date MISP existe
+        
+        ⚠️  Nécessite une connexion internet. En cas d'échec réseau,
+            l'étape est ignorée proprement sans bloquer le pipeline.
+        """
+        print("\n🔗 ÉTAPE 6: Enrichissement depuis sources externes (MITRE + MISP)...")
 
+        # Récupération des deux sources
+        mitre_map  = self.fetch_mitre_mapping()
+        misp_lookup = self.fetch_misp_galaxy()
 
-    
-    
+        # Si les deux échouent, on arrête proprement
+        if not mitre_map and not misp_lookup:
+            print("   ⚠️  Aucune source externe disponible — étape 6 ignorée.")
+            return
+
+        stats_dates   = 0   # year_created corrigés grâce à MISP
+        stats_misp    = 0   # acteurs enrichis via MISP
+        stats_mitre   = 0   # acteurs enrichis via MITRE
+
+        for actor in self.data_clean:
+            # ── Enrichissement MISP ───────────────────────────────────────────
+            if misp_lookup:
+                # Nettoyage pour comparaison : "Storm-1516" -> "storm-1516"
+                name_key = actor['value'].lower().strip()
+                misp_info = misp_lookup.get(name_key)
+
+                if misp_info:
+                    # Correction de year_created si encore inconnu
+                    if actor.get('year_created') in ['Unknown', None, ""] \
+                            and misp_info['first_seen'] != 'Unknown':
+                        actor['year_created'] = str(misp_info['first_seen'])[:4]
+                        stats_dates += 1
+
+                    # Ajout des métadonnées MISP dans meta
+                    actor['meta']['first_seen_misp'] = misp_info['first_seen']
+                    actor['meta']['last_seen_misp']  = misp_info['last_seen']
+                    actor['meta']['misp_main_name']  = misp_info['main_name']
+                    stats_misp += 1
+
+            # ── Enrichissement MITRE ──────────────────────────────────────────
+            if mitre_map:
+                tech_codes = actor.get('meta', {}).get('mitre_techniques', [])
+                if tech_codes:
+                    actor['meta']['mitre_techniques_resolved'] = [
+                        mitre_map.get(str(c).strip(), c) for c in tech_codes
+                    ]
+                    stats_mitre += 1
+
+        # Rapport final
+        print(f"\n   📊 Résultats enrichissement externe :")
+        print(f"      • Acteurs enrichis via MISP   : {stats_misp}")
+        print(f"      • Dates 'Unknown' corrigées   : {stats_dates}")
+        print(f"      • Acteurs enrichis via MITRE  : {stats_mitre}")
+        print(f"\n✅ Enrichissement externe terminé!")
+
     def save_cleaned_data(self, output_file='threat-actor-cleaned.json'):
         """Sauvegarde les données nettoyées en JSON"""
         print(f"\n💾 Sauvegarde des données vers {output_file}...")
@@ -392,7 +528,7 @@ class ThreatActor_Cleaner:
         
           
     def run(self):
-        """Pipeline"""
+        """Pipeline complet"""
         self.load_data()
         self.normalize_country_codes()
         #self.analyze_sponsors()
@@ -400,6 +536,7 @@ class ThreatActor_Cleaner:
         self.remove_duplicates_in_lists()
         self.enrich_all()
         self.extract_temporal_data()
+        self.enrich_from_external_sources()   # ← NOUVEAU : MITRE online + MISP
         self.save_cleaned_data()
         print("\n✅ Pipeline terminé!")
 
