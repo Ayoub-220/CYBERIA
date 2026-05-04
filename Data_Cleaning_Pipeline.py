@@ -16,6 +16,20 @@ class ThreatActor_Cleaner:
         self.data = None
         self.data_clean = None 
         
+    def log(self, section, message, type="INFO"):
+        """Formatte les logs proprement pour le suivi du pipeline"""
+        from datetime import datetime
+        symbols = {
+            "INFO": "ℹ️ ", 
+            "SUCCESS": "✅", 
+            "WARNING": "⚠️ ", 
+            "ERROR": "❌", 
+            "TIME": "⏱️ ",
+            "GMI": "⚔️ "
+        }
+        symbol = symbols.get(type, "🔹")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] {symbol} [{section}] {message}")
+        
     def load_data(self):
         """Charge le JSON et crée le DataFrame"""
         print("📂 Chargement des données...")
@@ -390,7 +404,40 @@ class ThreatActor_Cleaner:
             "KP": "PRK", "VN": "VNM", "UA": "UKR", "BR": "BRA",
             "TR": "TUR", "IN": "IND", "IL": "ISR", "SA": "SAU",
             "GB": "GBR", "FR": "FRA", "DE": "DEU", "JP": "JPN",
-            "KR": "KOR", "PK": "PAK", "PS": "PSE", "RO": "ROU"
+            "KR": "KOR", "PK": "PAK", "PS": "PSE", "RO": "ROU",
+            
+            # --- Ajouts pour couvrir tout le CSV GMI ---
+            "AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO",
+            "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE",
+            "BS": "BHS", "BH": "BHR", "BD": "BGD", "BY": "BLR", "BE": "BEL",
+            "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH",
+            "BW": "BWA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI",
+            "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF",
+            "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "CG": "COG",
+            "CD": "COD", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB",
+            "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DO": "DOM",
+            "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI",
+            "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "GA": "GAB",
+            "GM": "GMB", "GE": "GEO", "GH": "GHA", "GR": "GRC", "GT": "GTM",
+            "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND",
+            "HU": "HUN", "IS": "ISL", "ID": "IDN", "IQ": "IRQ", "IE": "IRL",
+            "IT": "ITA", "JM": "JAM", "JO": "JOR", "KZ": "KAZ", "KE": "KEN",
+            "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN",
+            "LS": "LSO", "LR": "LBR", "LY": "LBY", "LT": "LTU", "LU": "LUX",
+            "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV",
+            "ML": "MLI", "MT": "MLT", "MR": "MRT", "MU": "MUS", "MX": "MEX",
+            "MD": "MDA", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ",
+            "MM": "MMR", "NA": "NAM", "NP": "NPL", "NL": "NLD", "NZ": "NZL",
+            "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN",
+            "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL",
+            "PL": "POL", "PT": "PRT", "QA": "QAT", "RW": "RWA", "SN": "SEN",
+            "RS": "SRB", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN",
+            "SO": "SOM", "ZA": "ZAF", "SS": "SSD", "ES": "ESP", "LK": "LKA",
+            "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE",
+            "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS",
+            "TG": "TGO", "TT": "TTO", "TN": "TUN", "TM": "TKM", "UG": "UGA",
+            "AE": "ARE", "UY": "URY", "UZ": "UZB", "VE": "VEN", "YE": "YEM",
+            "ZM": "ZMB", "ZW": "ZWE"
         }
 
         try:
@@ -455,6 +502,107 @@ class ThreatActor_Cleaner:
         except Exception as e:
             print(f"   ❌ Erreur lors de l'enrichissement politique : {e}")
             return actors_data
+        
+    def enrich_with_militarisation(self, gmi_csv_path):
+        self.log("GMI", f"Ouverture de {gmi_csv_path}...")
+        
+        if not os.path.exists(gmi_csv_path):
+            self.log("GMI", "Fichier introuvable !", "ERROR")
+            return self.data_clean
+
+        try:
+            # 1. Lecture avec le bon séparateur (point-virgule)
+            df = pd.read_csv(gmi_csv_path, sep=';', on_bad_lines='skip')
+            
+            # 2. Trouver l'année la plus récente dans les colonnes (ex: "GMI 2022")
+            gmi_columns = [c for c in df.columns if 'GMI ' in c]
+            if not gmi_columns:
+                self.log("GMI", "Aucune colonne 'GMI XXXX' trouvée.", "ERROR")
+                return self.data_clean
+            
+            # On prend la dernière année mentionnée
+            latest_gmi_col = sorted(gmi_columns)[-1]
+            latest_year = latest_gmi_col.replace('GMI ', '')
+            
+            # On cherche aussi la colonne Rank correspondante
+            rank_col = f"Rank {latest_year}"
+            if rank_col not in df.columns:
+                # Sécurité au cas où le nom est un peu différent
+                rank_col = [c for c in df.columns if 'Rank' in c and latest_year in c][0]
+
+            self.log("GMI", f"Utilisation des données de l'année {latest_year}.", "INFO")
+
+            # 3. Création du mapping par ISO (ton fichier a une colonne 'ISO')
+            # On convertit en dictionnaire { 'CHN': score, ... }
+            gmi_map_score = {str(row['ISO']): row[latest_gmi_col] for _, row in df.iterrows() if pd.notna(row['ISO'])}
+            gmi_map_rank = {str(row['ISO']): row[rank_col] for _, row in df.iterrows() if pd.notna(row['ISO'])}
+
+            # 4. Même pont ISO-2 -> ISO-3 que pour les régimes
+            iso_bridge = {
+                "CN": "CHN", "RU": "RUS", "US": "USA", "IR": "IRN", 
+                "KP": "PRK", "VN": "VNM", "UA": "UKR", "BR": "BRA",
+                "TR": "TUR", "IN": "IND", "IL": "ISR", "SA": "SAU",
+                "GB": "GBR", "FR": "FRA", "DE": "DEU", "JP": "JPN",
+                "KR": "KOR", "PK": "PAK", "PS": "PSE", "RO": "ROU",
+                
+                # --- Ajouts pour couvrir tout le CSV GMI ---
+                "AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO",
+                "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE",
+                "BS": "BHS", "BH": "BHR", "BD": "BGD", "BY": "BLR", "BE": "BEL",
+                "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH",
+                "BW": "BWA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI",
+                "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF",
+                "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "CG": "COG",
+                "CD": "COD", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB",
+                "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DO": "DOM",
+                "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI",
+                "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "GA": "GAB",
+                "GM": "GMB", "GE": "GEO", "GH": "GHA", "GR": "GRC", "GT": "GTM",
+                "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND",
+                "HU": "HUN", "IS": "ISL", "ID": "IDN", "IQ": "IRQ", "IE": "IRL",
+                "IT": "ITA", "JM": "JAM", "JO": "JOR", "KZ": "KAZ", "KE": "KEN",
+                "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN",
+                "LS": "LSO", "LR": "LBR", "LY": "LBY", "LT": "LTU", "LU": "LUX",
+                "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV",
+                "ML": "MLI", "MT": "MLT", "MR": "MRT", "MU": "MUS", "MX": "MEX",
+                "MD": "MDA", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ",
+                "MM": "MMR", "NA": "NAM", "NP": "NPL", "NL": "NLD", "NZ": "NZL",
+                "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN",
+                "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL",
+                "PL": "POL", "PT": "PRT", "QA": "QAT", "RW": "RWA", "SN": "SEN",
+                "RS": "SRB", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN",
+                "SO": "SOM", "ZA": "ZAF", "SS": "SSD", "ES": "ESP", "LK": "LKA",
+                "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE",
+                "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS",
+                "TG": "TGO", "TT": "TTO", "TN": "TUN", "TM": "TKM", "UG": "UGA",
+                "AE": "ARE", "UY": "URY", "UZ": "UZB", "VE": "VEN", "YE": "YEM",
+                "ZM": "ZMB", "ZW": "ZWE"
+                
+            }
+
+            count = 0
+            for actor in self.data_clean:
+                country_iso2 = actor.get('meta', {}).get('country')
+                if country_iso2:
+                    iso3 = iso_bridge.get(country_iso2.upper())
+                    if iso3 in gmi_map_score:
+                        try:
+                            # Nettoyage des valeurs (parfois il y a des virgules dans les chiffres)
+                            score = str(gmi_map_score[iso3]).replace(',', '.')
+                            rank = str(gmi_map_rank[iso3]).replace(',', '.')
+                            
+                            actor['meta']['gmi_score'] = float(score)
+                            actor['meta']['gmi_rank'] = int(float(rank))
+                            count += 1
+                        except:
+                            continue
+            
+            self.log("GMI", f"{count} acteurs enrichis avec le score GMI {latest_year}.", "SUCCESS")
+            return self.data_clean
+
+        except Exception as e:
+            self.log("GMI", f"Erreur de lecture : {e}", "ERROR")
+            return self.data_clean
 
     # ══════════════════════════════════════════════════════════════════════════
     # ÉTAPE 6 — ENRICHISSEMENT MITRE ATT&CK ONLINE (depuis enrichissement.py)
@@ -618,6 +766,7 @@ class ThreatActor_Cleaner:
         self.remove_duplicates_in_lists()
         self.enrich_all()
         self.enrich_with_political_regimes(self.data_clean, 'political-regime.csv')
+        self.enrich_with_militarisation('gmi-2023.csv')
         self.extract_temporal_data()
         self.enrich_from_external_sources()   # ← NOUVEAU : MITRE online + MISP
         self.save_cleaned_data()
