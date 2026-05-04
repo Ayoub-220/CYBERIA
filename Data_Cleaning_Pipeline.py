@@ -375,6 +375,86 @@ class ThreatActor_Cleaner:
         
         print(f"   ✅ {final_enriched} acteurs enrichis avec succès")
         print(f"\n✅ Enrichissement terminé!")
+    
+    
+    def enrich_with_political_regimes(self, actors_data, owid_csv_path):
+        """
+        Enrichit les acteurs avec le régime politique de leur pays (Source: Our World In Data).
+        Gère la conversion ISO-2 (CN, RU) vers ISO-3 (CHN, RUS) utilisée par OWID.
+        """
+        print("\n🌍 ÉTAPE 7: Enrichissement avec les régimes politiques...")
+        
+        # 1. Pont de correspondance ISO-2 -> ISO-3 (les plus fréquents en cyber)
+        iso_bridge = {
+            "CN": "CHN", "RU": "RUS", "US": "USA", "IR": "IRN", 
+            "KP": "PRK", "VN": "VNM", "UA": "UKR", "BR": "BRA",
+            "TR": "TUR", "IN": "IND", "IL": "ISR", "SA": "SAU",
+            "GB": "GBR", "FR": "FRA", "DE": "DEU", "JP": "JPN",
+            "KR": "KOR", "PK": "PAK", "PS": "PSE", "RO": "ROU"
+        }
+
+        try:
+            # 2. Chargement du CSV
+            df_regimes = pd.read_csv(owid_csv_path)
+            
+            # 3. Identification automatique de la colonne 'regime' (ex: 'Political regime')
+            possible_cols = [c for c in df_regimes.columns if 'regime' in c.lower()]
+            if not possible_cols:
+                print(f"   ❌ Erreur : Aucune colonne 'regime' trouvée dans {owid_csv_path}")
+                return actors_data
+            regime_col = possible_cols[0]
+            print(f"   📊 Colonne détectée : '{regime_col}'")
+
+            # 4. Préparation des mappings (par Code ISO-3 et par Nom simplifié)
+            df_latest = df_regimes.sort_values('Year').groupby('Entity').last().reset_index()
+            
+            # Mapping par Code (ex: 'CHN': 0)
+            regime_map_code = {str(row['Code']): row[regime_col] for _, row in df_latest.iterrows() if pd.notna(row['Code'])}
+            # Mapping par Nom simplifié (ex: 'CHINA': 0) au cas où le nom est utilisé
+            regime_map_name = {self.simplify(row['Entity']): row[regime_col] for _, row in df_latest.iterrows()}
+            
+            regime_labels = {
+                0: "Closed Autocracy",
+                1: "Electoral Autocracy",
+                2: "Electoral Democracy",
+                3: "Liberal Democracy"
+            }
+
+            # 5. Enrichissement des acteurs
+            count = 0
+            for actor in actors_data:
+                country_raw = actor.get('meta', {}).get('country')
+                if not country_raw:
+                    continue
+
+                regime_code = None
+                
+                # Tentative A : Par Code ISO (CN -> CHN)
+                iso3 = iso_bridge.get(country_raw.upper())
+                if iso3 and iso3 in regime_map_code:
+                    regime_code = regime_map_code[iso3]
+                
+                # Tentative B : Par Nom simplifié (au cas où 'country' contient "China")
+                if regime_code is None:
+                    clean_name = self.simplify(country_raw)
+                    regime_code = regime_map_name.get(clean_name)
+
+                # Si on a trouvé une correspondance
+                if regime_code is not None:
+                    try:
+                        c_int = int(regime_code)
+                        actor['meta']['political_regime_code'] = c_int
+                        actor['meta']['political_regime_label'] = regime_labels.get(c_int, "Unknown")
+                        count += 1
+                    except:
+                        continue
+            
+            print(f"   ✅ {count} acteurs enrichis avec succès (Régimes politiques).")
+            return actors_data
+
+        except Exception as e:
+            print(f"   ❌ Erreur lors de l'enrichissement politique : {e}")
+            return actors_data
 
     # ══════════════════════════════════════════════════════════════════════════
     # ÉTAPE 6 — ENRICHISSEMENT MITRE ATT&CK ONLINE (depuis enrichissement.py)
@@ -514,6 +594,8 @@ class ThreatActor_Cleaner:
         print(f"      • Dates 'Unknown' corrigées   : {stats_dates}")
         print(f"      • Acteurs enrichis via MITRE  : {stats_mitre}")
         print(f"\n✅ Enrichissement externe terminé!")
+        
+    
 
     def save_cleaned_data(self, output_file='threat-actor-cleaned.json'):
         """Sauvegarde les données nettoyées en JSON"""
@@ -535,6 +617,7 @@ class ThreatActor_Cleaner:
         self.add_short_sponsor_names()
         self.remove_duplicates_in_lists()
         self.enrich_all()
+        self.enrich_with_political_regimes(self.data_clean, 'political-regime.csv')
         self.extract_temporal_data()
         self.enrich_from_external_sources()   # ← NOUVEAU : MITRE online + MISP
         self.save_cleaned_data()
