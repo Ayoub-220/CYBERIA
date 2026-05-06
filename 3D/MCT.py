@@ -90,7 +90,7 @@ fig.update_layout(
     width=900
 )
 
-fig.write_html('motivation_radar.html')
+fig.write_html('html/motivation_radar.html')
 print(f"\n✓ Radar chart sauvegardé: motivation_radar.html")
 
 # 3. Visualisation 3D - Motivation vs Cibles vs Année

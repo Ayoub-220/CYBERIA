@@ -83,7 +83,7 @@ fig.update_layout(
 )
 
 # 6. Sauvegarde en HTML
-output_file = 'visualization_3d.html'
+output_file = 'html/visualization_3d.html'
 fig.write_html(output_file)
 print(f"\n✓ Visualisation sauvegardée: {output_file}")
 
