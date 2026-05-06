@@ -141,7 +141,7 @@ fig2.update_layout(
     hovermode='closest'
 )
 
-fig2.write_html('motivation_signature_3d.html')
+fig2.write_html('html/motivation_signature_3d.html')
 print(f"✓ Visualisation 3D sauvegardée: motivation_signature_3d.html\n")
 
 fig.show()
