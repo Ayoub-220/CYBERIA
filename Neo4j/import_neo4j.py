@@ -70,7 +70,7 @@ class CyberImporter:
 
         meta = entry.get('meta', {})
 
-        # 3. Nœud Pays avec Enrichissement GÉOPOLITIQUE et MILITAIRE
+        # 3. Nœud Pays avec Régime, Militarisation et GDP (PIB)
         country_name = meta.get('cfr-suspected-state-sponsor')
         if country_name:
             tx.run("""
@@ -78,7 +78,8 @@ class CyberImporter:
                 SET c.regime_label = $r_label,
                     c.regime_code = $r_code,
                     c.militarisation_score = $g_score,
-                    c.militarisation_rank = $g_rank
+                    c.militarisation_rank = $g_rank,
+                    c.gdp = $gdp
                 WITH c
                 MATCH (a:Actor {name: $a_name})
                 MERGE (a)-[:SPONSORED_BY]->(c)
@@ -88,9 +89,10 @@ class CyberImporter:
             r_code=meta.get('political_regime_code'),
             g_score=meta.get('gmi_score'),
             g_rank=meta.get('gmi_rank'),
+            gdp=meta.get('attacker_gdp'), # Récupère la valeur du PIB
             a_name=actor_name)
 
-        # 4. Autres relations (Cibles, Outils, Techniques, Motivations)
+        # 4. Autres relations
         def add_list_rels(label, rel_type, field):
             if field == "cfr-suspected-state-sponsor": return
             vals = meta.get(field, [])

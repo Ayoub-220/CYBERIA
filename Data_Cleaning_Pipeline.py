@@ -743,6 +743,78 @@ class ThreatActor_Cleaner:
         print(f"      • Acteurs enrichis via MITRE  : {stats_mitre}")
         print(f"\n✅ Enrichissement externe terminé!")
         
+    def enrich_with_gdp(self, gdp_csv_path):
+        self.log("GDP", "Enrichissement avec les données économiques...")
+        if not os.path.exists(gdp_csv_path):
+            self.log("GDP", "Fichier PIB introuvable !", "ERROR")
+            return
+
+        df = pd.read_csv(gdp_csv_path)
+        # On prend la donnée la plus récente par pays
+        gdp_map = df.sort_values('Year').groupby('Code')['GDP per capita'].last().to_dict()
+
+        # Bridge ISO (celui que nous avons déjà fait)
+        iso_bridge = {
+                "CN": "CHN", "RU": "RUS", "US": "USA", "IR": "IRN", 
+                "KP": "PRK", "VN": "VNM", "UA": "UKR", "BR": "BRA",
+                "TR": "TUR", "IN": "IND", "IL": "ISR", "SA": "SAU",
+                "GB": "GBR", "FR": "FRA", "DE": "DEU", "JP": "JPN",
+                "KR": "KOR", "PK": "PAK", "PS": "PSE", "RO": "ROU",
+                
+                # --- Ajouts pour couvrir tout le CSV GMI ---
+                "AF": "AFG", "AL": "ALB", "DZ": "DZA", "AD": "AND", "AO": "AGO",
+                "AR": "ARG", "AM": "ARM", "AU": "AUS", "AT": "AUT", "AZ": "AZE",
+                "BS": "BHS", "BH": "BHR", "BD": "BGD", "BY": "BLR", "BE": "BEL",
+                "BZ": "BLZ", "BJ": "BEN", "BT": "BTN", "BO": "BOL", "BA": "BIH",
+                "BW": "BWA", "BN": "BRN", "BG": "BGR", "BF": "BFA", "BI": "BDI",
+                "KH": "KHM", "CM": "CMR", "CA": "CAN", "CV": "CPV", "CF": "CAF",
+                "TD": "TCD", "CL": "CHL", "CO": "COL", "KM": "COM", "CG": "COG",
+                "CD": "COD", "CR": "CRI", "CI": "CIV", "HR": "HRV", "CU": "CUB",
+                "CY": "CYP", "CZ": "CZE", "DK": "DNK", "DJ": "DJI", "DO": "DOM",
+                "EC": "ECU", "EG": "EGY", "SV": "SLV", "GQ": "GNQ", "ER": "ERI",
+                "EE": "EST", "ET": "ETH", "FJ": "FJI", "FI": "FIN", "GA": "GAB",
+                "GM": "GMB", "GE": "GEO", "GH": "GHA", "GR": "GRC", "GT": "GTM",
+                "GN": "GIN", "GW": "GNB", "GY": "GUY", "HT": "HTI", "HN": "HND",
+                "HU": "HUN", "IS": "ISL", "ID": "IDN", "IQ": "IRQ", "IE": "IRL",
+                "IT": "ITA", "JM": "JAM", "JO": "JOR", "KZ": "KAZ", "KE": "KEN",
+                "KW": "KWT", "KG": "KGZ", "LA": "LAO", "LV": "LVA", "LB": "LBN",
+                "LS": "LSO", "LR": "LBR", "LY": "LBY", "LT": "LTU", "LU": "LUX",
+                "MK": "MKD", "MG": "MDG", "MW": "MWI", "MY": "MYS", "MV": "MDV",
+                "ML": "MLI", "MT": "MLT", "MR": "MRT", "MU": "MUS", "MX": "MEX",
+                "MD": "MDA", "MN": "MNG", "ME": "MNE", "MA": "MAR", "MZ": "MOZ",
+                "MM": "MMR", "NA": "NAM", "NP": "NPL", "NL": "NLD", "NZ": "NZL",
+                "NI": "NIC", "NE": "NER", "NG": "NGA", "NO": "NOR", "OM": "OMN",
+                "PA": "PAN", "PG": "PNG", "PY": "PRY", "PE": "PER", "PH": "PHL",
+                "PL": "POL", "PT": "PRT", "QA": "QAT", "RW": "RWA", "SN": "SEN",
+                "RS": "SRB", "SL": "SLE", "SG": "SGP", "SK": "SVK", "SI": "SVN",
+                "SO": "SOM", "ZA": "ZAF", "SS": "SSD", "ES": "ESP", "LK": "LKA",
+                "SD": "SDN", "SR": "SUR", "SZ": "SWZ", "SE": "SWE", "CH": "CHE",
+                "SY": "SYR", "TJ": "TJK", "TZ": "TZA", "TH": "THA", "TL": "TLS",
+                "TG": "TGO", "TT": "TTO", "TN": "TUN", "TM": "TKM", "UG": "UGA",
+                "AE": "ARE", "UY": "URY", "UZ": "UZB", "VE": "VEN", "YE": "YEM",
+                "ZM": "ZMB", "ZW": "ZWE"
+                
+            }
+
+        for actor in self.data_clean:
+            meta = actor.get('meta', {})
+            
+            # 1. PIB de l'attaquant (Sponsor)
+            country_code = meta.get('country')
+            iso3_attacker = iso_bridge.get(country_code)
+            if iso3_attacker in gdp_map:
+                meta['attacker_gdp'] = gdp_map[iso3_attacker]
+
+            # 2. PIB des victimes (on fait la moyenne)
+            victims = meta.get('cfr-suspected-victims', [])
+            if victims:
+                victim_gdps = []
+                for v_name in victims:
+                    # Note: Ici il faudrait un petit bridge Noms -> ISO3 pour les victimes
+                    # On simplifie pour l'exemple
+                    pass 
+                # meta['victims_avg_gdp'] = sum(victim_gdps) / len(victim_gdps)
+        
     
 
     def save_cleaned_data(self, output_file='threat-actor-cleaned.json'):
@@ -768,7 +840,8 @@ class ThreatActor_Cleaner:
         self.enrich_with_political_regimes(self.data_clean, 'data/political-regime.csv')
         self.enrich_with_militarisation('data/gmi-2023.csv')
         self.extract_temporal_data()
-        self.enrich_from_external_sources()   # ← NOUVEAU : MITRE online + MISP
+        self.enrich_from_external_sources()
+        self.enrich_with_gdp('data/gdp.csv')
         self.save_cleaned_data()
         print("\n✅ Pipeline terminé!")
 
