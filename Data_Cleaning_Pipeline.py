@@ -765,13 +765,13 @@ class ThreatActor_Cleaner:
         self.add_short_sponsor_names()
         self.remove_duplicates_in_lists()
         self.enrich_all()
-        self.enrich_with_political_regimes(self.data_clean, 'political-regime.csv')
-        self.enrich_with_militarisation('gmi-2023.csv')
+        self.enrich_with_political_regimes(self.data_clean, 'data/political-regime.csv')
+        self.enrich_with_militarisation('data/gmi-2023.csv')
         self.extract_temporal_data()
         self.enrich_from_external_sources()   # ← NOUVEAU : MITRE online + MISP
         self.save_cleaned_data()
         print("\n✅ Pipeline terminé!")
 
 if __name__ == "__main__":
-    cleaner = ThreatActor_Cleaner('threat-actor.json', 'tgc-actors.json', 'tgc-tools.json')
+    cleaner = ThreatActor_Cleaner('data/threat-actor.json', 'data/tgc-actors.json', 'data/tgc-tools.json')
     cleaner.run()
