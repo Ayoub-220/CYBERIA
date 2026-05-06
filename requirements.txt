@@ -3,3 +3,8 @@ pandas
 fuzzywuzzy
 python-Levenshtein
 requests
+matplotlib
+seaborn
+scikit-learn
+numpy
+statsmodels

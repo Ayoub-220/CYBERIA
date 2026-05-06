@@ -33,7 +33,7 @@ fig = px.scatter_3d(
     y='GMI',            # Axe Y : Priorité militaire
     z='Complexite',     # Axe Z : Diversité technique
     color='Regime',     # Couleur par type de régime pour voir si les blocs se détachent
-    log_x=True,         # Échelle logarithmique pour le GDP (car les écarts sont énormes)
+    log_x=False,         # Échelle logarithmique pour le GDP (car les écarts sont énormes)
     hover_name='Nom',
     title="Le Triangle de la Puissance : Économie, Militarisation et Expertise Cyber",
     labels={
@@ -44,7 +44,7 @@ fig = px.scatter_3d(
 )
 
 fig.update_layout(scene = dict(
-                    xaxis_title='PIB (Échelle Log)',
+                    xaxis_title='PIB',
                     yaxis_title='Militarisation (GMI)',
                     zaxis_title='Complexité Cyber'))
 
