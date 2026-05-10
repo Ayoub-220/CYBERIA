@@ -1,71 +1,148 @@
-# CYBERIA
+<div align="center">
 
-Benyelles Djalil,
-Ourimi Ayoub,
-Bonnard Neil,
-
-Sujet:
-Étude et analyse de données de cybercriminalité
-Ce TER s’inscrit dans le contexte d’une collaboration avec le laboratoire de sociologie et de sciences politiques CESDIP au sein du projet CYBERIA. Ce dernier vise à étudier les pratiques, distribution dans le temps et l’espace, modes opératoires, des actes cybercriminels.
-L’objectif de ce projet est d’identifier et étudier des jeux de données relatifs à la cybercriminalité, puis d’expérimenter des techniques d’analyse de données, notamment en s’appuyant sur des modèles de langage, afin d’extraire des informations pertinentes pour les chercheurs en sciences sociales.
-Les tâches à réaliser sont donc :
-• étudier les jeux de données disponibles (Threat Group Cards: A Threat Actor Encyclopedia, …),
-• collecter et préparer les données dans un format adapté,
-• expérimenter des techniques d’analyse de données s’appuyant sur des modèles de langage.
-Encadrement : Zoubida Kedad <zoubida.kedad@uvsq.fr>, Stéphane Lopes
-<stephane.lopes@uvsq.fr>
-Nombre d’étudiants : 2/3
-
-Réunions:
-
-- 1ère Réunion (26/01/2026): Nettoyer le jeu de donnée.
-- 2ème Réunion (09/03/2026): Mise au point de ce qui a été fais. Continuer à enrichir la base et faire des analyses.
+# 🛡️ CYBERIA
 
 
-Documentation:
+Pipeline CTI qui agrège, nettoie et enrichit des données sur **919 acteurs cybercriminels**,  
+les corrèle avec des indicateurs géopolitiques (GMI, PIB, régime politique) et les analyse via MITRE ATT&CK.
 
-1.1 Data_Cleaning_Pipeline.py:
-Le fichier définit une classe appelée ThreatActor_Cleaner dont l’objectif est de nettoyer, normaliser et enrichir des données concernant des acteurs de cybermenaces (threat actors). Le programme fonctionne comme un pipeline de traitement de données : il charge un fichier JSON contenant des acteurs, nettoie les informations, supprime les incohérences, enrichit les données à partir de plusieurs sources externes (ThaiCERT, MITRE ATT&CK et MISP Galaxy), puis sauvegarde un nouveau fichier JSON enrichi.
-Le pipeline permet donc de transformer des données brutes en un dataset structuré et enrichi utilisable pour de l’analyse en Cybersécurité.
-Il est important avant tout de mentionner les différentes bibliothèques Python utilisées, car elles jouent un rôle essentiel dans le fonctionnement du programme. La bibliothèque requests est utilisée pour effectuer des requêtes HTTP afin de récupérer des données depuis des sources externes comme MITRE ATT&CK ou MISP Galaxy. La bibliothèque RapidFuzz (ou fuzzywuzzy) est utilisée pour effectuer du fuzzy matching, c’est-à-dire comparer des chaînes de caractères de manière approximative afin d’associer des noms d’acteurs même lorsqu’ils ne sont pas exactement identiques. La bibliothèque re est utilisée pour les expressions régulières, notamment pour extraire des informations spécifiques comme des années ou des identifiants MITRE à partir de chaînes de caractères. Enfin, les bibliothèques standard comme json sont utilisées pour lire et écrire les fichiers de données. L’utilisation de ces bibliothèques permet d’automatiser le nettoyage, la correspondance et l’enrichissement des données de manière efficace.
-On va donc maintenant passer aux petites méthodes qui ont permis à notre pipeline de bien focntionner.
-1.1.1 Chargement et nettoyage des données:
-- La méthode load_data est la première étape du pipeline. Elle charge le fichier JSON principal contenant les acteurs de menace et extrait la liste située dans la clé "values". Cette liste est ensuite stockée dans self.data_clean, qui sera utilisée dans toutes les étapes suivantes. Cette méthode permet également de vérifier que les données ont été correctement chargées en affichant le nombre d’acteurs et un exemple.
-- La méthode normalize_country_codes permet ensuite d’uniformiser les codes pays présents dans les métadonnées des acteurs. Elle parcourt tous les acteurs et transforme les codes pays en majuscules afin d’éviter les incohérences, par exemple entre "fr" et "FR". Cette étape est importante pour garantir la cohérence des données.
-- La méthode add_short_sponsor_names sert à normaliser les noms des États sponsors. Certains noms sont très longs ou écrits différemment selon les sources, donc cette méthode remplace ces noms par des versions plus courtes et standardisées, comme "Russian Federation" remplacé par "Russia". Cela permet d’avoir des valeurs homogènes dans tout le dataset.
-- La méthode remove_duplicates_in_lists permet de supprimer les doublons présents dans les listes des métadonnées. Par exemple, si un outil ou une cible apparaît plusieurs fois pour un même acteur, la méthode reconstruit la liste en ne gardant qu’une seule occurrence de chaque élément. Cette étape permet d’avoir des données propres et d’éviter les répétitions inutiles.
-- La fonction simplify est une fonction utilitaire utilisée pour normaliser les noms. Elle met les noms en majuscules et supprime les espaces et les tirets. Cela permet de comparer plus facilement des noms légèrement différents comme "APT-28", "APT 28" ou "apt28", qui seront tous transformés en "APT28".
-- La méthode extract_temporal_data permet d’extraire l’année de création d’un acteur à partir d’une date complète. Elle utilise une expression régulière pour récupérer les quatre chiffres correspondant à l’année. Si aucune date n’est trouvée, la valeur "Unknown" est utilisée.
-Passons maintenant à la partie enrichissement.
-1.1.2 Enrichissement des données:
-- La méthode enrich_all est la partie centrale du programme. Elle permet d’enrichir les acteurs de menace en utilisant les bases de données ThaiCERT, qui contiennent des informations sur les acteurs et les outils qu’ils utilisent.
-La première étape consiste à charger les fichiers contenant les acteurs et les outils ThaiCERT. Une fois ces fichiers chargés, le programme prépare une liste de candidats pour le matching. Cette liste contient non seulement les noms principaux des acteurs, mais aussi tous leurs synonymes. Cette étape est importante car un même acteur peut être connu sous plusieurs noms différents.
-Ensuite, le programme utilise une technique appelée fuzzy matching pour associer les acteurs du fichier principal avec ceux de la base ThaiCERT. Le fuzzy matching permet de comparer des chaînes de caractères même si elles ne sont pas exactement identiques. Par exemple, il permet d’associer "APT-28" avec "APT28" ou "Fancy Bear". Pour chaque acteur, le programme calcule plusieurs scores de similarité et conserve le meilleur match si le score dépasse un certain seuil.
-Une fois les correspondances trouvées, le programme construit une structure de données contenant les informations d’enrichissement pour chaque acteur, comme les motivations, les cibles, les outils utilisés et les techniques MITRE. Ces informations sont stockées dans un dictionnaire temporaire.
-Après cela, le programme enrichit également les acteurs avec les outils ThaiCERT. Il parcourt la base des outils et regarde quelles relations existent entre les outils et les acteurs (relation "used-by"). Lorsqu’un outil est utilisé par un acteur, il est ajouté à la liste des outils de cet acteur, et les techniques MITRE associées à cet outil sont également ajoutées.
-Enfin, toutes les informations enrichies sont ajoutées aux acteurs du dataset principal. Les nouvelles informations sont stockées dans les métadonnées sous des champs comme cti_motivation, cti_targets, cti_tools et mitre_techniques. Cette méthode permet donc de transformer un acteur simple en un acteur enrichi avec beaucoup plus d’informations utiles pour l’analyse.
-Après avoir enrichi les acteurs en associant leurs informations avec la base ThaiCERT, il est nécessaire de compléter ces données en récupérant les identifiants MITRE ATT&CK. En effet, certaines informations récupérées contiennent des références vers des techniques MITRE, mais pas directement les identifiants exploitables. C’est pour cette raison que la méthode suivante, extract_mitre_ids, a pour objectif d’extraire automatiquement ces identifiants à partir des liens et des références présents dans les données.
+**Projet TER — ESIEA × UVSQ-CESDIP**
 
-- La méthode extract_mitre_ids sert à extraire les identifiants MITRE ATT&CK à partir d’une liste de références, généralement des URLs. Dans les bases de données de cyber threat intelligence, les techniques MITRE sont souvent référencées via des liens, mais pour l’analyse, il est plus utile de récupérer directement les identifiants comme T1059 ou S0020.
-Pour cela, la méthode utilise une expression régulière qui permet de détecter les identifiants correspondant aux techniques (Txxxx), aux logiciels (Sxxxx) ou aux groupes (Gxxxx). Elle parcourt ensuite toutes les références, extrait les identifiants trouvés et les stocke dans une liste. Enfin, elle supprime les doublons en convertissant la liste en ensemble puis en liste à nouveau.
-Cette méthode est importante car elle permet de relier les acteurs de menace aux techniques MITRE ATT&CK qu’ils utilisent, ce qui est essentiel dans l’analyse de cybermenaces.
-Une fois les identifiants MITRE extraits, ces identifiants seuls ne sont pas encore très lisibles ni exploitables pour une analyse. Il est donc nécessaire d’aller récupérer des informations supplémentaires associées à ces identifiants, comme le nom des techniques ou des groupes. C’est le rôle de la méthode enrich_from_external_sources, qui va utiliser des sources externes pour enrichir davantage les données des acteurs.
+</div>
 
-- La méthode enrich_from_external_sources constitue la dernière étape d’enrichissement des données. Elle utilise les informations récupérées depuis MITRE ATT&CK et MISP Galaxy pour enrichir encore davantage les acteurs.
-Dans un premier temps, elle appelle les méthodes qui téléchargent les données MITRE et MISP. Ensuite, pour chaque acteur du dataset, elle tente de trouver des informations correspondantes dans la base MISP. Si l’acteur est trouvé, le programme ajoute les dates de première apparition et de dernière activité dans les métadonnées, ainsi que le nom principal utilisé dans MISP. Si l’année de création de l’acteur était inconnue, elle peut être corrigée grâce à la date de première apparition fournie par MISP.
-Dans un second temps, le programme enrichit les techniques MITRE. Les acteurs possèdent déjà une liste d’identifiants MITRE, mais ces identifiants ne sont pas très lisibles. Le programme utilise donc le dictionnaire créé précédemment pour remplacer chaque identifiant par une description lisible contenant le nom de la technique et la phase de l’attaque correspondante.
-Cette méthode permet donc d’obtenir des données finales beaucoup plus complètes, avec des informations temporelles et des descriptions détaillées des techniques utilisées par les acteurs.
-Pour pouvoir enrichir les données à partir de sources externes, il faut d’abord récupérer et préparer les données provenant de ces sources. C’est justement le rôle des méthodes fetch_mitre_mapping et fetch_misp_galaxy, qui téléchargent et construisent des tables de correspondance entre les identifiants MITRE, les groupes et les informations associées. Ces tables seront ensuite utilisées par la méthode d’enrichissement pour compléter automatiquement les informations des acteurs.
+---
 
-- La méthode fetch_mitre_mapping permet de télécharger la base complète MITRE ATT&CK depuis le dépôt GitHub officiel de MITRE. Cette base contient toutes les techniques, les outils et les logiciels connus dans le framework MITRE ATT&CK.
-Le programme télécharge le fichier JSON contenant toutes ces informations, puis parcourt tous les objets présents dans le fichier. Il sélectionne uniquement les objets correspondant aux techniques, aux malwares et aux outils. Pour chacun de ces objets, il récupère l’identifiant MITRE, le nom de la technique et les phases de la kill chain associées.
-Le programme construit ensuite un dictionnaire qui associe chaque identifiant MITRE à une description lisible contenant le nom de la technique et la phase correspondante. Ce dictionnaire sera ensuite utilisé pour remplacer les codes MITRE par des noms compréhensibles dans les données finales.
-Cette méthode est importante car elle permet de rendre les données beaucoup plus lisibles et compréhensibles pour un analyste en cybersécurité.
-- La méthode fetch_misp_galaxy permet de télécharger la base MISP Galaxy contenant des informations sur les acteurs de menace. Cette base contient notamment les dates de première apparition (first_seen) et de dernière activité (last_seen) des acteurs.
-Le programme télécharge le fichier JSON depuis GitHub, puis parcourt tous les acteurs présents dans la base. Pour chaque acteur, il récupère le nom principal, les synonymes, la date de première apparition et la date de dernière apparition. Ensuite, il construit un dictionnaire permettant d’associer n’importe quel nom ou synonyme à ces informations.
-Cette méthode est utile car elle permet d’ajouter des informations temporelles sur l’activité des acteurs, ce qui est très important en cyber threat intelligence.
+## ⚙️ Installation
 
-En conlusion, ce programme permet de transformer un fichier de données brut contenant des informations sur des acteurs de menace en un fichier enrichi, structuré et exploitable. L’ensemble de ces étapes forme un pipeline complet de traitement de données, allant du chargement des données jusqu’à leur sauvegarde finale. Ce pipeline permet d’automatiser un travail qui serait très long à faire manuellement, tout en améliorant la qualité et la richesse des informations sur les acteurs de menace.
+```bash
+git clone https://github.com/ton-user/cyberia.git
+cd cyberia
+pip install -r requirements.txt
+mkdir -p html resultat
+```
 
+---
 
-Le script import_neo4j.py assure l'intégration finale des données du projet CYBERIA dans une base de données orientée graphe. En s'appuyant sur la classe CyberImporter, il transforme les fichiers JSON nettoyés en un réseau d'entités interconnectées, facilitant l'analyse des modes opératoires pour les chercheurs en sciences sociales. L'utilisation stratégique de la clause Cypher MERGE garantit l'unicité des données et évite toute redondance lors de l'injection massive d'informations. Ce module structure l'écosystème autour de l'acteur cybercriminel, en générant des relations dynamiques vers ses cibles, ses outils et ses commanditaires présumés. Cette approche relationnelle permet d'identifier visuellement des corrélations complexes et des tendances au sein de la cybercriminalité.
+## 🔄 Pipeline de nettoyage & enrichissement
+
+**Script :** `Data_Cleaning_Pipeline.py` → produit `threat-actor-cleaned.json`
+
+### 1. Chargement & fusion des sources
+
+```
+threat-actor.json  ──┐
+tgc-actors.json    ──┼──► merge par nom d'acteur
+tgc-tools.json     ──┘
+```
+
+Chaque acteur de `threat-actor.json` est matché contre les entrées `tgc-actors.json` (nom principal + synonymes) via **fuzzy matching à seuil 95%** — d'abord un match exact (après normalisation), puis `fuzz.ratio` / `partial_ratio` / `token_set_ratio` si aucun exact n'est trouvé. Les outils et techniques MITRE sont ensuite rattachés aux acteurs via les relations `used-by` (UUID) dans `tgc-tools.json`, sans fuzzy.
+
+### 2. Normalisation des champs CTI
+
+| Champ | Traitement |
+|-------|-----------|
+| `cfr-suspected-state-sponsor` | Mapping manuel des variantes longues (`"People's Republic of China"` → `"China"`) |
+| `country` | Normalisation en majuscules (ISO-2) |
+| `mitre_techniques` | Extraction par regex `(T\d{4}|S\d{4}|G\d{4})` depuis les URLs de refs + déduplication |
+| `cti_tools` | Récupération directe depuis `tgc-tools.json` via UUID, déduplication |
+| `year_created` | Extraction par regex `\d{4}` sur le champ `created`, fallback MISP |
+
+### 3. Enrichissement géopolitique
+
+Pour chaque acteur, le code ISO-2 du pays (`country`) est converti en ISO-3 via une table de correspondance manuelle, puis jointé sur trois sources externes :
+
+**PIB par habitant** — [Our World in Data / Banque Mondiale](https://ourworldindata.org/grapher/gdp-per-capita-worldbank)
+Mesure la richesse économique du pays sponsor. Permet de corréler capacité financière et sophistication des attaques. La valeur la plus récente disponible par pays est retenue.
+```
+gdp.csv  →  attacker_gdp  (USD courants, dernière année disponible)
+```
+
+**Global Militarization Index 2023** — [BICC via StatBase](https://statbase.org/datasets/military/global-militarisation-index/)
+Score composite (0–1000) mesurant le degré de militarisation d'un État : dépenses militaires en % du PIB et du budget santé, effectifs militaires en % de la population. Plus le score est élevé, plus l'État priorise sa capacité militaire.
+```
+gmi-2023.csv  →  gmi_score (0–1000),  gmi_rank
+```
+
+**Régime politique** — [Our World in Data / V-Dem](https://ourworldindata.org/grapher/political-regime)
+Classification des régimes selon l'indice V-Dem, encodée sur une échelle ordinale. Permet de distinguer les acteurs étatiques selon leur contexte politique.
+```
+political-regime.csv  →  political_regime_label,  political_regime_code
+                          0 = Closed Autocracy
+                          1 = Electoral Autocracy
+                          2 = Electoral Democracy
+                          3 = Liberal Democracy
+```
+
+### 4. Enrichissement externe (MITRE + MISP)
+
+Appel à l'API MITRE ATT&CK pour résoudre les IDs en noms lisibles (`mitre_techniques_resolved`). Appel à MISP Galaxy pour récupérer `first_seen`, `last_seen` et corriger les `year_created` restés `Unknown`.
+
+### 5. Output
+
+```json
+{
+  "value": "APT28",
+  "year_created": 2008,
+  "meta": {
+    "cfr-suspected-state-sponsor": "Russia",
+    "cti_tools": ["Mimikatz", "X-Agent"],
+    "mitre_techniques": ["T1059", "T1078", "T1566"],
+    "cti_targets": ["Government", "Defense"],
+    "cti_motivation": ["Information theft and espionage"],
+    "gmi_score": 843.2,
+    "gmi_rank": 2,
+    "attacker_gdp": 1862000000000,
+    "political_regime_label": "Electoral Autocracy",
+    "political_regime_code": 1
+  }
+}
+```
+
+---
+
+## 📊 Analyses & Visualisations
+
+### Heatmaps tactiques — `analyse.py`
+
+Corrélation outils × pays cibles et outils × secteurs. Le paramètre `n` contrôle le Top affiché.
+
+![Heatmap Outils vs Pays](resultat/analyse_outils_pays.png)
+![Heatmap Outils vs Secteurs](resultat/analyse_outils_secteurs.png)
+
+---
+
+### Visualisations 3D — `MCT.py` / `RFC.py` / `RMC.py`
+
+| Script | Axes | Output |
+|--------|------|--------|
+| `MCT.py` | Motivation / Nb cibles / Année | `html/motivation_signature_3d.html` |
+| `RFC.py` | Régime politique / Score GMI / Techniques MITRE | `html/visualization_3d.html` |
+| `RMC.py` | PIB / Score GMI / Complexité cyber | *(affichage direct)* |
+
+---
+
+## 🗄️ Import Neo4j — `import_neo4j.py`
+
+```bash
+python import_neo4j.py
+# 919 acteurs importés en ~X secondes
+```
+
+**Modèle de graphe :**
+
+```
+(Actor)-[:SPONSORED_BY]──►(Country)
+(Actor)-[:USES_TOOL]────►(Tool)
+(Actor)-[:EMPLOYS]──────►(Technique)
+(Actor)-[:TARGETS]──────►(Target)
+(Actor)-[:HAS_MOTIVATION]►(Motivation)
+(Actor)-[:CREATED_IN]───►(Year)
+```
+
+Chaque nœud `Country` embarque directement `gmi_score`, `gmi_rank`, `gdp` et `political_regime_label` pour les requêtes analytiques.
+
+---
+
+<div align="center">
+CYBERIA — TER 2025 | ESIEA × UVSQ-CESDIP | Google.org Cybersecurity Seminars
+</div>
