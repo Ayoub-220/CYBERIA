@@ -1,0 +1,45 @@
+=== SECTEURS ===
+Nombre de valeurs : 42
+
+Aerospace
+Automotive
+Aviation
+Casinos and Gambling
+Chemical
+Construction
+Critical infrastructure
+Defense
+Education
+Embassies
+Energy
+Engineering
+Entertainment
+Financial
+Food and Agriculture
+Gaming
+Government
+Healthcare
+High-Tech
+Hospitality
+IT
+Industrial
+Law enforcement
+Manufacturing
+Maritime and Shipbuilding
+Media
+Mining
+NGOs
+Non-profit organizations
+Oil and gas
+Online video game companies
+Petrochemical
+Pharmaceutical
+Research
+Retail
+Satellites
+Shipping and Logistics
+Technology
+Telecommunications
+Think Tanks
+Transportation
+Utilities

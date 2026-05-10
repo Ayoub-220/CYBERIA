@@ -1,0 +1,11 @@
+=== TYPES_INCIDENTS ===
+Nombre de valeurs : 8
+
+Business Email Compromise
+Defacement
+Denial of service
+Espionage
+Extortion
+Financial Theft
+Information Operations
+Sabotage

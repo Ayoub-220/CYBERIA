@@ -1,0 +1,1907 @@
+=== OUTILS ===
+Nombre de valeurs : 1904
+
+3AM
+3PARA RAT
+3Rat Client
+3proxy
+404-Input-shell web shell
+4H RAT
+7-Zip
+7Logger
+8.t Dropper
+888 RAT
+9002 RAT
+ADORE.XSEC
+ADRecon
+AIRBREAK
+ALPC Local PrivEsc
+AMTsol
+APERETIF
+APT3 Keylogger
+ARL
+ARTFULPIE
+ASPXSpy
+ATI-Agent
+ATMDtrack
+AUMLIB
+AWFULSHRED
+AZORult
+AbaddonPOS
+AceHash
+ActionRAT
+ActionSpy
+Acunetix Web Vulnerability Scanner
+AdFind
+Adminer
+AdobeARM
+Advanced Port Scanner
+AdvisorsBot
+Adwind
+Adzok
+Agent Racoon
+Agent Tesla
+Agent.BTZ
+Agent.DNE
+Albaniiutas
+Allakore RAT
+Alma Communicator
+Amadey
+Amphibeon
+Anchor
+Andaratm
+AndoServer
+AndroMut
+AndroRAT
+Android RAT
+Andromeda
+Anel
+AntSword
+Antak
+Antd
+Anubis Backdoor
+AnvilEcho
+AnyDesk
+ApacheStealer
+ApolloShadow
+Apostle
+AppleJeus
+AppleSeed
+AresRAT
+ArguePatch
+Aria-body
+Aria-body loader
+AridSpy
+ArtraDownloader
+Aryan
+Asruex
+Astra
+AsyncRAT
+AtNow
+AtlasAgent
+Atmosphere
+AtomSilo
+AuditCred
+August Stealer
+Auriga
+AutoIt backdoor
+Avaddon
+Ave Maria
+Aversome infector
+BABYMETAL
+BADCALL
+BADFLICK
+BADNEWS
+BADSIGNAL
+BADSOLAR
+BASICSTAR
+BBSRAT
+BEACON
+BEATDROP
+BELLHOP
+BFG Agonizer Wiper
+BH_A006
+BIASBOAT
+BIFROST
+BIOLOAD
+BIOPASS RAT
+BIRDWATCH
+BISCUIT
+BISTROMATH
+BITTERSWEET
+BLINDINGCAN
+BLUEAGAVE
+BLUEBEAM
+BLUEHAZE
+BLUELIGHT
+BLUESTEAL
+BOLDMOVE
+BONDUPDATER
+BRICKSTORM
+BROKEYOLK
+BS2005
+BTC Changer
+BUBBLEWRAP
+BUFFETLINE
+BUSTEDPIPE
+Babar
+Babuk Locker
+BabyShark
+BackBend
+BackConfig
+Backdoor Batel
+Backspace
+BadBazaar
+BadHatch
+BadPatch
+BadPotato
+Bahamut
+BanSwift
+Bandook
+Bankshot
+Barb(ie) Downloader
+BarbWire
+Barlaiy
+Bart
+Bateleur
+BazarBackdoor
+BeEF
+BeaconLoader
+BeaverTail
+Behinder
+Bemstour
+BendyBear
+Benghazi.exe
+Bezigate
+BiBi Wiper
+BigpipeLoader
+Bioazih
+Bisonal
+BitPaymer
+BitRAT
+Bitsran
+Black Lambert
+BlackCat
+BlackCoffee
+BlackEnergy
+BlackMatter
+BlackMould
+BlackNET RAT
+BlackPOS
+BlackSmith
+BlindToad
+Blogspot
+BloodHound
+BlotchyQuasar
+Blue Lambert
+BlueCore
+BlueShell
+Bluether
+BokBot
+BoneSpy
+Bookcode
+Boostwrite
+BootWreck
+BottomLoader
+Bouncer
+Bourbon
+Bozok
+Brambul
+BreachRAT
+Briba
+BrittleBush
+BrowsingHistoryView
+Brute Ratel
+BrutishCommand
+BugSleep
+Buhtrap
+BumbleBee
+Buran
+Bvp47
+ByPassGodzilla
+Byeby
+Bypass-UAC
+BypassBoss
+C0d0so0
+CACTUSTORCH
+CALENDAR
+CARROTBALL
+CARROTBAT
+CASHY200
+CASTLETAP
+CEELOADER
+CHAINSHOT
+CHAIRSMACK
+CHERRYSPY
+CLAMBLING
+CLNTEND
+CLOSEWATCH
+CLOUDSTATS
+CLRLoad
+COLDCAT
+COLDJAVA
+COMpfun
+CORALDECK
+CORESHELL
+CREDRIVER
+CROWVIEW
+CSPY Downloader
+CWoolger
+CXCLNT
+Cachedump
+CaddyWiper
+Cadelspy
+Cahnadr
+Cain & Abel
+CallMe
+Calypso RAT
+CamCapture Plugin
+Cannon
+CapraRAT
+Capriccio RAT
+CapturaTela
+Carbanak
+CarbonSteal
+Cardinal RAT
+Careto
+Casper
+Castov
+Catchamas
+Caterpillar
+CetaRAT
+ChChes
+CheckID
+CheeseTray
+China Chopper
+Chinoxy
+Chisel
+Chocopop
+ChromeCookiesView
+ChromeHistoryView
+ChromePass
+Chrommme
+Chthonic
+Citadel
+Cl Wiper
+Clayslide
+CleanToad
+Cleaner
+ClientTraficForwarder
+Clop
+CloudDuke
+CloudScout
+CmdSQL
+Cmstar
+Cobalt Strike
+Cobra Carbon System
+Cobra DocGuard
+Colibri Loader
+CollectionRAT
+ComRAT
+Combos
+Comfoo
+CommandCam
+Commix
+CommonMagic
+Comnie
+Computrace
+Concealment Troy
+Confucius
+Conti
+Contopee
+CookieBag
+CookieTime
+CordScan
+CoreBot
+CoreLoader
+Corentry
+CosmicDuke
+CostaBricks
+Cotx RAT
+CoughingDown
+CozyDuke
+CrackMapExec
+Crackshot
+Creamsicle
+CreepyDrive
+CreepySnail
+Cridex
+Crimson RAT
+CrossC2
+CrossRAT
+CrossWalk
+Crowdoor
+CroxLoader
+Crutch
+Crypta
+Cryptcat
+CrypticConvo
+Cryptmerlin
+CryptoLocker
+CryptoMix
+CryptoWall
+CsExt
+Ctealer
+Cuba
+Cucky
+Cuegoe
+Cuthead
+Cutwail
+Cyan Lambert
+CyberGate RAT
+Cyclops Blink
+DADJOKE
+DARKDEW
+DAVESHELL
+DBLL Dropper
+DBoxAgent
+DCHSpy
+DCSrv
+DCSync
+DDG
+DDKONG
+DEADEYE
+DEADWOOD
+DELPHSTATS
+DEPLOYLOG
+DILLJUICE
+DILLWEED
+DIRTCLEANER
+DKMC
+DLRAT
+DMLOADER
+DNSExfitrator
+DNSMessenger
+DNSRat
+DNSpionage
+DOGCALL
+DOPLUGS
+DOSTEALER
+DOUBLEFANTASY
+DRATzarus
+DRAWSTRING
+DRIFTPIN
+DRIGO
+DUNLOADER
+DUSTPAN
+DUSTTRAP
+Dacls RAT
+Dadstache
+Dagger Three
+Dairy
+DanBot
+DanDrop
+DanaBot
+DanderSpritz
+Danfuan
+DangerAds
+DarkComet
+DarkCrystal RAT
+DarkHotel
+DarkMe
+DarkPulsar
+DarkRAT
+DarkSide
+DarkVNC
+DarthPusher
+Daserf
+Datper
+DbxDump Utility
+Deadglyph
+DealersChoice
+DeathRansom
+Decrypt-RDCMan.ps1
+Deed RAT
+DeepCreep
+Defray777
+DeltaCharlie
+Demodex
+Depriz
+DeputyDog
+Derusbi
+Desert Scorpion
+DessertDown
+Destover
+DetaRAT
+Dexbia
+Diavol
+DilongTrash
+Dino
+DinoTrain
+DinodasRAT
+DirBuster
+Dirsearch
+DistTrack
+Distribute.exe
+DmaUp3.exe
+Dolphin
+DoorMe
+DoppelPaymer
+Doraemon
+Dorshel
+DoubleAgent
+DoubleFeature
+DoublePulsar
+DoubleT
+DownPaper
+Downdelph
+Downeks
+Dozer
+DragonEgg
+Dridex
+Dripion
+DroidJack
+DropBook
+DropPhone
+Dropbox
+Drovorub
+Drupalgeddon
+Dtrack
+Dudear
+Dudell
+Duqu
+Dustman
+DustyExfilTool
+DustySky
+Duuzer
+DvDupdate.dll
+DyePack
+Dyre
+EAGLEDOOR
+EFSPotato
+EHAGBPSL
+ELECTRICFISH
+ELMER
+EMASTEAL
+ENCODE MMC
+EQUATIONDRUG
+EQUATIONLASER
+ETUMBOT
+EVILSUN
+EYE
+EYService
+EarthWorm
+EasyNight
+Ecipekac
+Egregor
+Elirks
+Elise
+ElizaRAT
+EmailStealer
+Emdivi
+Emissary
+Emotet
+EmpireDNSAgent
+EmpireProject
+Enfal
+EnvyScout
+Epic
+EpicenterRAT
+Erebus
+EternalBlue
+EternalRomance
+EtherealGh0st
+EvilBunny
+EvilGnome
+EvilGrab RAT
+Evilnum
+ExDudell
+Excalibur
+Explosive
+FALLCHILL
+FANNY
+FASTCash
+FIVEHANDS
+FLIPSIDE
+FLOWERPIPE
+FORKBEARD
+FOXGRABBER
+FRAUDROP
+FRP
+FakeFish
+FakeHighFive
+FakeM
+FalseFont
+Fantasy
+Farse
+Farseer
+FatDuke
+Felismus
+Ficker Stealer
+FileZilla
+Filepak
+FilepakMonitor
+Filerase
+Fimlis
+FinFisher
+Final1stSpy
+Fire Chili
+FireMalv
+FireMaster
+FireWood
+FiveTran
+Flagpro
+Flame
+Flapjack
+Flashflood
+FlawedAmmyy
+FlawedGrace
+FleetDeck
+FlipCreep
+FlowCloud
+FlowerPippi
+FlowerPower
+FluffyGh0st
+FlyingDutchman
+FoggyWeb
+Foozer
+Formbook
+FormerFirstRAT
+FoundCore
+Fox Panel
+Freenki Loader
+FrozenCell
+FruityC2
+FudModule
+FullThrottle
+FunnyDream
+FunnySwitch
+FurBall
+FuxosDoor
+GCMAN
+GDOCUPLOAD
+GELCAPSULE
+GHOSTSPIDER
+GIMMICK
+GLASSES
+GLASSTOKEN
+GLOOXMAIL
+GO Simple Tunnel
+GOGGLES
+GOLDBACKDOOR
+GORBLE
+GOSSIPFLOW
+GRAYFISH
+GREENCAT
+GRILLMARK
+GROK
+GUNTERS
+GUP Proxy Tool
+Gamaredon
+GameOver Zeus
+GammaDrop
+GammaLoad
+GammaSteel
+GandCrab
+Gazer
+Gcat
+GearShift
+Gelsemine
+Gelsenicine
+Gelsevirine
+Gelup
+Gemcutter
+GeminiDuke
+Geppei
+Get-LAPSP.ps1
+Get2
+GetMail
+GetUserSPNS.vbs
+Gh0st RAT
+Gh0stCringe
+Gh0stCringe RAT
+Gh0stTimes
+Gh0stnet
+Ghambar
+Ghole
+GlanceLove
+GlobeImposter
+GnatSpy
+GoBot2
+GoBuster
+GoProxy
+Godlua
+Godzilla
+Gold Dragon
+GoldFinder
+GoldMax
+GoldenEagle
+GoldenRAT
+GolfSpy
+GollumApp
+Gon
+Goodor
+GoogleDrive RAT
+Goopy
+GooseEgg
+Gootkit
+Gophe
+Gopuram
+GotoHTTP
+Govmomi
+GozNym
+Gozi
+Gozi ISFB
+GpUpdates.exe
+GraphSteel
+GraphicalNeutrino
+GraphicalProton
+Graphican
+Graphiron
+Graphite
+Grateful POS
+Gray Lambert
+Grease
+Green Lambert
+GreezeBackdoor
+GrewApacha
+Grief
+Griffon
+GrimPlant
+GuLoader
+H-Worm
+H1N1 Loader
+HALFBAKED
+HALFSHELL
+HAPPYWORK
+HARDRAIN
+HATVIBE
+HDRoot
+HDoor
+HELLOKITTY
+HIDEDRV
+HKDOOR
+HLOADER
+HOMEFRY
+HOOKSHOT
+HOPLIGHT
+HOTCROISSANT
+HOTLANE
+HTML5 Encoding
+HTTP Troy
+HTTPBrowser
+HTTPSnoop
+HTTPTunnel
+HTran
+HUC Port Banner Scanner
+HUI Loader
+HYPERSCRAPE
+Hackfase
+Hades
+HammerDuke
+Hamsa Wiper
+Hancitor
+Handala
+Hannotog
+Harpoon
+Hatef Wiper
+Havex RAT
+Havij
+Havoc
+Hawup
+Hdump
+Headlace
+Hekatomb
+Helauto
+Hello EK
+Helminth
+HemiGate
+HenBox
+Heriplor
+Hermes
+HesperBot
+HiKit
+HiddenLotus
+HighNoon
+HighNote
+Hisoka
+Hodur
+HoldingHands RAT
+HomamDownloader
+HopperTick
+Hornbill
+HotelAlfa
+Hotwax
+HtDnDownLoader
+Http Dr0pper
+Hunter
+Hupigon
+Hurix
+Hussar
+HyperBro
+HyperStack
+ICONICSTEALER
+IE PassView
+IGT supertool
+IHEATE
+IMAPLoader
+IPsec Helper
+IRAFAU
+IRONHALO
+IRONSQUIRREL
+ISMAgent
+ISMDoor
+ISMInjector
+IXESHE
+IceCube
+IcedCoffee
+Icefog
+IconDown
+Imecab
+Imminent Monitor RAT
+Impacket
+Inception
+Industrial Spy
+Industroyer
+Industroyer2
+Infostealer
+Infy
+InsidiousGh0st
+Inveigh
+InvisiMole
+InvisibleFerret
+Invoke the Hash
+Invoke-SMBAutoBrute
+IronNetInjector
+IronPython
+IronWind
+IsSpace
+Ivoke
+JESTBOT
+JHUHUGIT
+JPIN
+JS Flash
+JSPRAT
+JSPSPY
+JSSLoader
+JackalControl
+JackalPerInfo
+JackalScreenWatcher
+JackalSteal
+JackalWorm
+JadeRAT
+Jaff
+Jason
+Jasus
+Javafog
+JhoneRAT
+Joanap
+Jokra
+JpgRun
+JripBot
+JsonCookies
+JuicyPotato
+JuicyPotatoNG
+Jumpall
+KANDYKORN
+KARAE
+KAgent
+KEYMARBLE
+KEYPLUG
+KGH_SPY
+KHRAT
+KIVARS
+KLRD
+KOMPROGO
+KPortScan
+KRNRAT
+KSL0T
+KTLVdoor
+KamiKakaBot
+Karagany
+Karba
+Karkoff
+KasperAgent
+Kazuar
+KeeThief
+Kegotip
+Kelihos
+Kerberoast
+Kerberods
+KerrDown
+Ketrican
+Ketrum
+KevDroid
+KeyBoy
+Keyrecord
+Kikothac
+KillDisk
+Killua
+KimJongRAT
+Kimsuky
+Kitkiot
+Koadic
+Komplex
+Konni
+KopiLuwak
+Koredos
+Korkerds
+Krong
+Kronos
+KsRemote
+Kurton
+Kwampirs
+LATCHKEY
+LATELUNCH
+LEMONSTICK
+LEMPO
+LEOUNCIA
+LESLIELOADER
+LIFEBOAT
+LIGHTBOLT
+LIGHTDART
+LIGHTRAIL
+LIGHTSHIFT
+LIGHTSHOW
+LIGHTWIRE
+LIONTAIL
+LOADGRIP
+LOADOUT
+LODEINFO
+LOGBLEACH
+LONGRUN
+LONGWATCH
+LOOKOVER
+LOSTKEYS
+LOWBALL
+LSD
+LUNCHMONEY
+LaZagne
+LadonGo
+Lambert
+LastConn
+Lastacloud
+Lazarus
+LazyCat
+Leash
+LightBot
+LightNeuron
+LightlessCan
+LightsOut EK
+Lilith RAT
+LimeRAT
+Limepad
+Linfo
+Listrix
+LiteDuke
+Living off the Land
+Lizar
+LoFiSe
+LoJax
+LockBit
+LockFile
+LockerGoga
+Locky
+Loda
+Logger Module
+LokiBot
+Lowkey
+Lslsass
+LuaDream
+Lucky Cat
+Luminosity RAT
+LummaC2
+MAGICDROP
+MAILSLOT
+MAPIget
+MASEPIE
+MASOL RAT
+MASQLOADER
+MATA
+MBR Eraser
+MBS BTC Stealer
+MEGAsync
+METALJACK
+MFC Keyloggers
+MILKDROP
+MINEBRIDGE
+MINEDOOR
+MINIBIKE
+MINIBUS
+MISTCLOAK
+MIXLABEL
+MKL Pro Keylogger
+MOONSHINE
+MOPSLED
+MPKBot
+MQsTTang
+MS Exchange Tool
+MSFvenom
+MSUpdater
+MURKYTOP
+MY24
+MZCookiesView
+Macaw Locker
+Machete
+Macma
+Madi
+Madness PRO DDoS
+Magecart
+Magenta Lambert
+MagicRAT
+MagicWeb
+MailPassView
+Maintools.js
+ManItsMe
+MargulasRAT
+MarkiRAT
+Marlin
+Matryoshka RAT
+Maze
+Md_client
+MechaFlounder
+Mechanical
+MediaPl
+MedusaLocker
+MegaCreep
+Merdoor
+MessageTap
+Metasploit
+Meterpreter
+MgBot
+MiS-Type
+MiamiBeach
+Microolap Packet Sniffer
+Micropsia
+Milan
+Milkmaid
+Milum
+Mimikatz
+Mimilite
+MiniASP
+MiniDuke
+Minzen
+MirageFox
+MirrorBlast
+MirrorStealer
+MischiefTut
+Misdat
+Mivast
+MobileOrder
+Mobzsar
+MoleNet
+Molerat Loader
+MoneyTaker
+Moneybird
+Mongall
+MoonBounce
+MoonPeak
+MoonWalk
+More_eggs
+Moriya
+Mosquito
+MrPerfectInstaller
+MuddyC2Go
+Mudwater
+MultiLayer Wiper
+MultiPipeLoader
+MumbaiDown
+MyDogs
+MyKLoadClient
+Mydoom
+MysterySnail RAT
+N1stAgent
+NAILGUN
+NB65
+NCAT
+NDiskMonitor
+NETVulture
+NETWoolger
+NFlog
+NIGHTJAR
+NOKNOK
+NOOPDOOR
+NPS
+NSIS
+NSPX30
+NTDSDump
+NachoCheese
+Naid
+Naikon
+NanHaiShu
+NanoCore RAT
+Nautilus
+NavRAT
+Nbot
+Nebulae
+Necurs
+Nefilim
+Nemim
+Nemty
+Neo-reGeorg
+Neptun
+Nerex
+NestEgg
+Net Crawler
+NetEagle
+NetExec
+NetFlash
+NetHelp Infostealer
+NetPwdDump
+NetSess
+NetSessionEnum
+NetSpy
+NetSupport Manager
+NetTraveler
+NetUseEngine
+NetWalker
+NetWire RC
+Netero
+Netview
+Network Password Recovery
+Neuron
+Neutrino
+NewCT
+NewCore RAT
+NewPass
+NewsReels
+Ngrok
+Nibatad
+NickelLoader
+NightSky
+Nightdoor
+NimbleMamba
+Nimcy
+NineRAT
+Ninja
+NinjaCopy
+Nishang
+Niteris EK
+No-Justice Wiper
+Nokki
+Non-sucking Service Manager
+Ntospy
+NukeSped
+Nymaim
+OCEANMAP
+ODRIZ
+OKSOLO
+OLDBAIT
+OPENSHACKLE
+ORCSHRED
+OSInfo
+OS_Check_445
+ObfuBerry
+ObfuMerry
+ObliqueRAT
+OceanLotus
+Oceansalt
+Octopus
+OddJob
+Odinaff
+OilRig
+Okrum
+OnionDuke
+OopsIE
+OpBlockBuster
+OpGhoul
+OperaPassView
+Orangeade
+Orat
+OtterCookie
+OutLoader
+OutSteel
+Outlook Backdoor
+OwaAuth
+OwlProxy
+Owowa
+P.A.S.
+P0wnyshell
+P8RAT
+PACMAN
+PAExec
+PCClient
+PCHUNTER
+PCShare
+PEBBLEDASH
+PGoShell
+PHOREAL
+PHPMailer
+PICKPOCKET
+PINEFLOWER
+PINEGROVE
+PLAINTEE
+PLANKWALK
+PLEAD
+PNGLoad
+POOLRAT
+POORAIM
+POPFLASH
+PORTHOLE
+POSHSPY
+POTROAST
+POWBAT
+POWERPIPE
+POWERPLANT
+POWERPOST
+POWERSOURCE
+POWERSTAR
+POWERSTATS
+POWERTON
+POWRUNER
+POWSSHNET
+PRB-Backdoor
+PRIVATELOG
+PSLogger
+PUBLOAD
+PULSEPACK
+PVE Find AD Users
+PVZ-In
+PVZ-Out
+Pagoda
+Pallas
+Pandora
+Pantegana
+PapaCreep
+Paperbug
+Parallax RAT
+PartialWasher Wiper
+Pasam
+Pass-The-Hash Toolkit
+PassKillDisk
+PasswordFox
+Pay2Key
+PayloadBIN
+PcExter
+Penquin Turla
+Peppy RAT
+PhanDoor
+PhantomLance
+PhantomNet
+Philadelphia
+Phishery
+Phoenix
+PhonyC2
+PhpSpy
+Pierogi
+PiggyBack
+PikoloRAT
+PinchDuke
+PingCastle
+PingPull
+Pink Lambert
+PinkKite
+Pioneer
+PipeMon
+PipeSnoop
+Pirpi
+Pisloader
+Pitvotnacci
+PlainGnome
+Plink
+PlugX
+PlugY
+PluginPhantom
+PoSlurp
+PocoDown
+Poison Ivy
+PoisonCarp
+Poldat
+PolyglotDuke
+PondRAT
+Pony
+PoohMilk Loader
+Port.exe
+PortQry
+PortScan
+PoshAdvisor
+PoshC2
+PowGoop
+PowHeartBeat
+PowerBand
+PowerBrace
+PowerDuke
+PowerDump
+PowerExchange
+PowerLess Backdoor
+PowerMagic
+PowerPunch
+PowerRatankba
+PowerShell RAT
+PowerShellRunner-based RPC backdoor
+PowerShower
+PowerSploit
+PowerSpritz
+PowerStallion
+PowerTask
+PowerTrick
+PowerView
+Powerkatz
+Powermud
+Prikormka
+Pro-Ocean
+ProLock
+ProcDump
+ProduKey
+Protected Storage PassView
+Protux
+ProxyBot
+ProxyChains
+ProxyT
+Proxysvc
+Ps2dllLoader
+PsExec
+PsList
+PsiXBot
+Psylo
+Pteranodon
+PuTTY
+PubFantacy
+Pulseway
+PunchBuggy
+PuppetLoader
+PupyRAT
+Pure Storage FlashArray
+Purple Lambert
+PyDCrypt
+PyFlash
+PyMICROPSIA
+PySoxy
+PyVil RAT
+PyXie
+Pyark
+PylangGhost
+Pylot
+PythocyDbg
+QCRat
+QUADAGENT
+QUEUESEED
+QUIETEXIT
+QakBot
+Quant Loader
+QuarkBandit
+Quarks PwDump
+QuasarRAT
+Quickcafe
+QuietSieve
+QuiteRAT
+RADIOSTAR
+RAILLOAD
+RAILSETTER
+RAINDROP
+RARSTONE
+RATHOLE
+RC SHELL
+RCLONE
+RCSession
+RDAT
+RDFSNIFFER
+RDP
+RDPWrap
+RELOADEXT
+REPTILE
+RGDoor
+RICECURRY
+RIFLESPINE
+RMS
+ROCKBOOT
+ROMCOM RAT
+ROUTERSCAN
+RSBINJECT
+RTM
+RUHAPPY
+RagnarLocker
+Ragnatela
+RaidBase
+Rambo
+Ramnit
+Ramsay
+Rana
+RansomBoggs
+RapidStealer
+Raspberry Robin
+RatSnif
+Ratankba
+RatankbaPOS
+RawDisk
+RawPOS
+ReZer0
+Recon
+ReconModule
+ReconShark
+RedAlpha
+RedCore
+RedLeaves
+RedLine
+RedPepper
+RedSalt
+RedShawl
+RedXOR
+ReflectiveGnome
+RegDuke
+Regin
+RemShell
+RemShell Downloader
+Remcom
+RemcosRAT
+Remexi
+Remote CMD/PowerShell terminal
+Remote Control System
+Remote Desktop PassView
+RemoteCMD
+Remsec
+Remy
+Resetter
+Reshell
+Responder
+Retefe
+Retefe (Android)
+Retro
+RevSocks
+Revealer Keylogger
+RevengeRAT
+ReverseRAT
+Rhadamanthys
+Rifdoor
+Rikamanu
+Rising Sun
+Roaming Mantis
+RoboSki
+RockLoader
+RocketMan
+RogueRobin
+RokRAT
+Roland
+RomeoAlfa
+RomeoBravo
+RomeoCharlie
+RomeoDelta
+RomeoEcho
+RomeoFoxtrot
+RomeoGolf
+RomeoHotel
+RomeoMike
+RomeoNovember
+RomeoWhiskey
+Romeos
+Rook
+RotBot
+RottenPotato
+RoyalCli
+RoyalDNS
+Rsocx
+Rubeus
+Ruler
+RustBucket
+RustDesk
+RustDown
+Ryuk
+S-Type
+S3BROWSER
+SAGEHIRE
+SALTLICK
+SCRAPMINT
+SDBbot
+SDelete
+SEAWEED
+SHAPESHIFT
+SHARPEXT
+SHARPKNOT
+SHARPSTATS
+SHELLSWEEP
+SHORTBENCH
+SHUTTERSPEED
+SIDESHOW
+SIGFLIP
+SIGTRANslator
+SILENTUPLOADER
+SIMPOBOXSPY
+SIXPACK
+SLAPSTICK
+SLICKSHOES
+SLOWDRIFT
+SLOWROLL
+SLRat
+SLUB
+SMBExec
+SMBTouch
+SMBTrap
+SNUGRIDE
+SOLOSHRED
+SOUNDBITE
+SOUNDWAVE
+SPARKLOG
+SPICA
+SPINOFF
+SPOONBEARD
+SQLRAT
+SQLULDR2
+SSHMinion
+SScan
+STASHLOG
+STEELCORGI
+STEELHOOK
+STSRCheck
+SUBTLE-PAWS
+SUDDENICON
+SUGARLOADER
+SUNBURST
+SUNSPOT
+SUPERNOVA
+SVCMONDR
+SWEARJAR
+SWEETCANDLE
+SWEETDROP
+SafetyKatz
+Sagerunex
+SaintBot
+Saitama
+Sakabota
+Sakula RAT
+Salgorea
+Sality
+SamSam
+SameCoin
+Samurai
+Sandboxie
+SandroRAT
+Sardonic
+Sasfis
+Satellite Turla
+ScarCruft
+Scieron
+Scotch
+Scote
+Scout
+ScreenCap
+ScreenConnect
+Screenshotter
+SeDLL
+SeaDuke
+Seasalt
+SecHack
+SecreetsDump
+Secure Socket Funneling
+Sedkit
+Sedreco
+SerialPktdoor
+SerialVlogger
+ServHelper
+Serveo
+SessionGopher
+SessionManager
+ShadowHammer
+ShadowNet
+ShadowPad Winnti
+ShadyRAT
+SharPyShell
+Shark
+Sharp-SMBExec
+SharpEfsPotato
+SharpHound
+SharpJSHandler
+SharpSploit
+SharpStage
+SharpToken
+SharpView
+SharpZulip
+SheepRAT
+ShellClient
+Shifu
+ShimRAT
+Shipshape
+Shootback
+Shylock
+Sibot
+SideTwist
+SideWalk
+SierraAlfa
+SierraCharlie
+Silence
+SilentCMD
+SilentGh0st
+SilkBean
+Silver Lambert
+SilverHawk
+Sima
+Sinowal
+Sisfader
+SkeletonKeyInjector
+SkiBoot
+SkinnyBoy
+Skip-2.0
+Skipper
+Slingshot
+Sliver
+SlowStepper
+SlugResin
+SmallTiger
+Smbmap
+Smoke Loader
+SmsSpy
+SnailResin
+Snatch
+Sneepy
+SniffPass
+Snugy
+SocGholish
+Socat
+SocksBot
+SodaMaster
+Sodinokibi
+SodomMain
+SodomNormal
+SoftEther VPN
+SoftPerfect Network Scanner
+Sojax
+SombRAT
+SoreFang
+Sorgu
+Spaceship
+Spark
+SparkRAT
+SparrowDoor
+Speculoos
+Spedear
+Spellbinder
+Spidey Bot
+Spindest
+Splashtop
+Sponsor
+SpoolFool
+SprySOCKS
+SpyC23
+SpyGlace
+SpyMax
+SpyNote RAT
+SpyWaller
+Spyder
+Sqlextractor
+SslMM
+StarLoader
+StarsyPound
+Stealc
+Stealer
+Stealth Mango
+StealthFalcon
+StickyFingers
+Stink
+StoneDrill
+StreamEx
+StrifeWater
+StrongPity
+StrongPity2
+StrongPity3
+Stubbedoor
+Stunnel
+Subbrute
+Sublist3r
+SubtractThis
+SunBird
+SweetPotato
+SweetSpecter
+SwiftSlicer
+Swor
+Sword
+Sword2033
+Sykipot
+Symatic Loader
+SymonLoader
+SynFlooder
+Sys10
+SysGet
+SysInternals
+SysJoker
+SysKit
+SysUpdate
+Syscon
+Sysmain
+SystemBC
+TABBYCAT
+TABLEFLIP
+TAINTEDSCRIBE
+TAMECAT
+TAXHAUL
+TCP Port Scanner
+TDTESS
+TEARDROP
+TERA
+TESDAT
+TFlower
+THC Hydra
+THINCRUST
+THINSPOOL
+THOR
+THREEBYTE
+TIDYELF
+TINYTYPHON
+TManger
+TODDLERSHARK
+TOM-Skype
+TONEDEAF
+TONEDEAF 2.0
+TONEINS
+TONESHELL
+TOUCHKEY
+TOUCHMOVE
+TOUCHSHIFT
+TOUCHSHOT
+TRANSLATEXT
+TRIPLEFANTASY
+TTCalc
+TURNEDUP
+TYPEFRAME
+TabMsgSQL
+TacticalRMM
+Tafacalou
+Taidoor
+Tailscale
+Tapaoux
+Tarsip
+Taurus Loader
+TcpBridge
+Tcp_transfer
+Tdrop
+Tdrop2
+TeamSpy
+TeamViewer
+TechnoCreep
+TelePowerBot
+Termite
+TerraCrypt
+TerraLogger
+TerraPreter
+TerraRecon
+TerraStealer
+TerraTV
+TerraWiper
+Terracotta VPN
+TeslaGun
+The CloudSorcerer
+ThreatKit
+ThreatNeedle
+ThreeDollars
+Tickler
+TidePool
+TigerRAT
+TightVNC
+Tinba
+Tiny SHell
+TinyCryptor
+TinyLoader
+TinyMet
+TinyNode
+TinyNote
+TinyPOS
+TinyPosh
+TinyTurla
+TinyTurla-NG
+TinyZBot
+Tinyproxy
+Titan
+Titanium
+Tofu Backdoor
+TomBerBil
+Tonnerre
+Topinambour
+Torn RAT
+TrailBlazer
+TranslucentGh0st
+TriFive
+TriangleDB
+TrickBot
+TrickMo
+TrillClient
+Triton
+Trochilus RAT
+Troll Stealer
+Troy
+Truvasys
+TunnelSpecter
+Tunnus
+Turian
+TurlaChopper
+TwoFace
+UNAPIMON
+UNITEDRAKE
+UPDATESEE
+URLZone
+USBCulprit
+USBStealer
+USBWorm
+USBferry
+UltraVNC
+Underground
+Unknown Logger
+UpDocX
+Upatre
+Uroburos
+VALUEVAULT
+VAMP
+VARGEIT
+VBREVSHELL
+VBShower
+VEILEDSIGNAL
+VENOMBITE
+VHD
+VIDAR
+VIDEOKILLER
+VINETHORN
+VIRTUALGATE
+VIRTUALPIE
+VIRTUALPITA
+VIRTUALSHINE
+VNC
+VPNFilter
+VSingle
+Valak
+ValeforBeta
+Vasport
+Vatet
+Vawtrak
+Vcrodat
+Veil
+VeilShell
+VenomKit
+VenomLNK
+VenomRAT
+ViceLeaker
+Violet Lambert
+Viper
+ViperRAT
+Vjw0rm
+Vminst
+Voice Massege.apk
+VolatileVenom
+Voldemort
+Volgmer
+Vyveva
+W2K Res Kit
+WAExp
+WARP
+WARPRISM
+WARPWIRE
+WHEATSCAN
+WIDETONE
+WINELOADER
+WINERACK
+WINNKIT
+WINTERLOVE
+WIREFIRE
+WITCHCOVEN
+WMI Ghost
+WSCSPL
+WSO
+Wadhrama
+Waizsar RAT
+WannaCry
+Warzone RAT
+WastedLoader
+WastedLocker
+WaterSpout
+WbBot
+WebBrowserPassView
+WebC2
+Webmask
+Weevly
+WellMail
+WellMess
+WhiskerSpy
+Whisky
+WhisperGate
+White Lambert
+WhiteAtlas
+Whitebird
+Wiarp
+Wii
+WinIDS
+WinMM
+WinRAR
+WinSCP
+WinZip
+WindTail
+Windows Credentials Editor
+Winexe
+Wingbird
+Winnti
+WinorDLL64
+Winos
+Winsloader
+WispRider
+WizardNet
+WmiExec
+WndTest
+WolfRAT
+WolfsBane
+Wormhole
+Wpscan
+WsTunnel
+WyrmSpy
+X-Agent
+X-Tunnel
+XBOW
+XClient
+XDDown
+XDList
+XDLoc
+XDMonitor
+XDOOR
+XDPass
+XDRecon
+XDUpload
+XMRig
+XSLCmd
+XServer
+Xbash
+XtremeRAT
+Yahoyah
+YamaBot
+Yasso
+Yort
+Z*Stealer
+ZAP
+ZIPLINE
+ZLoader
+ZMsg
+ZPP
+ZUMKONG
+ZXPortMap
+ZXShell
+ZeGhost
+Zebrocy
+ZeroCleare
+ZeroT
+Zeus
+Zeus OpenSSL
+Zeus Panda
+Zingdoor
+ZooPark
+ZoxRPC
+Zupdax
+adbupd
+agfSpy
+bangat
+beendoor
+ccf32
+certutil
+chrome-passwords
+dmsSpy
+dneSpy
+fingerprintjs2
+fscan
+get-logon-history.ps1
+gosecretsdump
+gpresult
+gsecdump
+hcdLoader
+httpclient
+jsp File browser
+kl.ps1
+lcx
+liderc
+lightSpy
+lite_more_eggs
+meek
+msieckc.exe
+nbtscan
+nbtstat
+netcat
+njRAT
+nmap
+oRAT
+pngdowner
+psinstrc.ps1
+pwdump
+rarstar
+reGeorg
+redis-rogue-getshell
+remote-access-c3
+sLoad
+scanbox
+sctrls
+shareip
+sip_telephone
+smbtool
+spwebmember
+sqlmap
+swissknife2
+w32times
+xDll
+xPack
+xRAT
+xfs-disp.exe
+xkeylog
+xsPlus
+zhCat
+zhMimikatz
+zwShell

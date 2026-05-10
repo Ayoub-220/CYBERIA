@@ -1,0 +1,173 @@
+=== PAYS_ATTAQUES ===
+Nombre de valeurs : 170
+
+AT&T
+Afghanistan
+Albania
+Algeria
+Argentina
+Armenia
+Asia
+Asia Pacific Economic Cooperation
+Association of Southeast Asian Nations
+Australia
+Austria
+Azerbaijan
+BB&T
+Bahamas
+Bahrain
+Bangladesh
+Bangladesh Bank
+Bank of America
+Belarus
+Belgium
+Brazil
+Brunei
+Cambodia
+Cameroon
+Canada
+Capital One
+Central African Republic
+Central Asia
+Chile
+China
+Citigroup
+Colombia
+Costa Rica
+Croatia
+Cryptocurrency exchanges in South Korea
+Cuba
+Czech Republic
+Denmark
+Djibouti
+East Asia
+Eastern Europe
+Ecuador
+Egypt
+Estonia
+Europe
+European Commission
+European Union
+Fifth Third Bank
+Finland
+France
+Gaza
+Georgia
+Germany
+Global
+Greece
+Guatemala
+HSBC
+Hong Kong
+Hungary
+India
+Indonesia
+International Association of Athletics Federations
+Iran
+Iranian internet activists
+Iraq
+Ireland
+Israel
+Italy
+Ivory Coast
+Japan
+Jordan
+Kazakhstan
+Kenya
+Korea (Republic of)
+Korea Institute for Defense Analyses
+Kurdistan
+Kuwait
+Kyrgyzstan
+Laos
+Latvia
+Lebanon
+Lebonon
+Libya
+Lithuania
+Luxembourg
+Macao
+Malaysia
+Mali
+Mexico
+Middle East
+Ministry of Unification
+Moldova
+Mongolia
+Morocco
+Myanmar
+NATO
+NYSE
+Namibia
+Nepal
+Netherlands
+New Zealand
+Nigeria
+North America
+North Korea
+Northeast Africa
+Norway
+OSCE
+Oman
+PNC
+Pakistan
+Palestine
+Panama
+Peru
+Philippines
+Poland
+Portugal
+Qatar
+Republic of Korea
+Romania
+Russia
+Russian Federation
+Rwanda
+Saudi Arabia
+Sejong Institute
+Senegal
+Serbia
+Singapore
+Slovakia
+Solomon Islands
+Somalia
+Sony Pictures Entertainment
+South Africa
+South America
+South Asia
+South Korea
+South Sudan
+Southeast Asia
+Southeast Asian
+Southern Africa
+Spain
+Sri Lanka
+Sudan
+Suriname
+Sweden
+Switzerland
+Syria
+Taiwan
+Tajikistan
+Thailand
+The Middle East
+The Philippines
+Togo
+Tunisia
+Turkey
+Turkmenistan
+U.S. government/defense sector websites
+U.S. satellite and aerospace sector
+US
+US Bancorp
+Uighurs
+Ukraine
+United Arab Emirates
+United Kingdom
+United States
+Uzbekistan
+Venezuela
+Vietnam
+Wells Fargo
+World Anti-Doping Agency
+Yemen

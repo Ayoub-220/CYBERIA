@@ -1,0 +1,20 @@
+=== PAYS_SOURCES ===
+Nombre de valeurs : 17
+
+Belarus
+China
+France
+India
+Iran
+Israel
+Lebanon
+North Korea
+Pakistan
+Palestine
+Russia
+South Korea
+Spain
+United Arab Emirates
+United States
+Unknown
+Vietnam
