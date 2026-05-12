@@ -6,7 +6,7 @@
 Pipeline CTI qui agrège, nettoie et enrichit des données sur **919 acteurs cybercriminels**,  
 les corrèle avec des indicateurs géopolitiques (GMI, PIB, régime politique) et les analyse via MITRE ATT&CK.
 
-**Projet TER — ESIEA × UVSQ-CESDIP**
+**Projet TER — UVSQ-CESDIP**
 
 </div>
 
@@ -144,5 +144,5 @@ Chaque nœud `Country` embarque directement `gmi_score`, `gmi_rank`, `gdp` et `p
 ---
 
 <div align="center">
-CYBERIA — TER 2025 | ESIEA × UVSQ-CESDIP | Google.org Cybersecurity Seminars
+CYBERIA — TER 2025 | UVSQ-CESDIP
 </div>
