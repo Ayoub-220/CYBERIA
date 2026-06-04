@@ -135,7 +135,7 @@ Nos scripts génèrent des graphiques multidimensionnels (exportés en HTML) pou
 
 Cartographie l'impact de la puissance économique (PIB) et de la priorité militaire (GMI) sur la sophistication cyber (Complexité technique). Les couleurs permettent de distinguer rapidement les différents régimes politiques.
 
-![alt text](../assets/RMC.gif)
+![Visualisation RMC](../assets/RMC.gif)
 
 ---
 
