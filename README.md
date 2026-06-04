@@ -135,7 +135,7 @@ Nos scripts génèrent des graphiques multidimensionnels (exportés en HTML) pou
 
 Cartographie l'impact de la puissance économique (PIB) et de la priorité militaire (GMI) sur la sophistication cyber (Complexité technique). Les couleurs permettent de distinguer rapidement les différents régimes politiques.
 
-![Visualisation RMC](../assets/RMC.gif)
+![Visualisation RMC](../3D_Resultat/RMC.gif)
 
 ---
 
@@ -143,7 +143,7 @@ Cartographie l'impact de la puissance économique (PIB) et de la priorité milit
 
 Met en relation directe la nature du régime politique d'un État sponsor (de 0 = Autocratie fermée à 3 = Démocratie libérale) avec son indice de militarisation et l'arsenal technique déployé (nombre de techniques MITRE ATT&CK employées).
 
-![alt text](../assets/RFC.gif)
+![alt text](../3D_Resultat/RFC.gif)
 
 ---
 
@@ -151,7 +151,7 @@ Met en relation directe la nature du régime politique d'un État sponsor (de 0 
 
 Explore l'évolution temporelle des acteurs cyber (Année d'apparition) en croisant leur motivation principale (Espionnage, Profit financier, Sabotage...) et la surface de leur menace (Nombre de secteurs ciblés). *Ce script génère également un graphique radar de la distribution des motivations.*
 
-![alt text](../assets/MCT.gif)
+![alt text](../3D_Resultat/MCT.gif)
 
 ---
 
@@ -162,7 +162,7 @@ Une vue d'ensemble géographique croisant la géopolitique et les cybermenaces. 
 * **Taille des cercles :** Le score de militarisation (Indice GMI) de l'État.
 * **Couleur des cercles :** La nature de son régime politique (de l'autocratie à la démocratie).
 
-![alt text](../assets/Carte.gif)
+![alt text](../3D_Resultat/Carte.gif)
 
 ---
 
