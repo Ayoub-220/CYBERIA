@@ -155,7 +155,7 @@ Explore l'évolution temporelle des acteurs cyber (Année d'apparition) en crois
 
 ---
 
-#### Cartographie Mondiale des Menaces — `carte.py`
+#### Cartographie Mondiale des Menaces — `choropleth.py`
 
 Une vue d'ensemble géographique croisant la géopolitique et les cybermenaces. Cette carte choroplèthe interactive permet d'identifier en un coup d'œil l'origine étatique des attaques grâce à trois dimensions de données :
 * **Intensité du fond :** Le volume total d'acteurs cybercriminels sponsorisés par le pays.
