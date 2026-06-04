@@ -57,7 +57,7 @@ fig = px.scatter_3d(
         'Force_GMI': ':.2f',
         'Complexite': True
     },
-    title="Analyse 3D Cyberia : Régime Politique - Force Militaire - Complexité Cyber",
+    title="Analyse 4D Cyberia : Régime Politique - Force Militaire - Complexité Cyber",
     labels={
         'Regime_Code': 'Régime Politique (0=Autocratie → 3=Démocratie)',
         'Force_GMI': 'Score de Militarisation (GMI)',

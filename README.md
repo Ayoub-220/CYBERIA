@@ -6,7 +6,7 @@
 Pipeline CTI qui agrège, nettoie et enrichit des données sur **919 acteurs cybercriminels**,  
 les corrèle avec des indicateurs géopolitiques (GMI, PIB, régime politique) et les analyse via MITRE ATT&CK.
 
-**Projet TER — ESIEA × UVSQ-CESDIP**
+**Projet TER — UVSQ-CESDIP**
 
 </div>
 
@@ -104,20 +104,60 @@ Appel à l'API MITRE ATT&CK pour résoudre les IDs en noms lisibles (`mitre_tech
 
 ### Heatmaps tactiques — `analyse.py`
 
-Corrélation outils × pays cibles et outils × secteurs. Le paramètre `n` contrôle le Top affiché.
+Cartographie des corrélations entre les outils cyber les plus déployés et leurs cibles (pays et secteurs d'activité). Ces heatmaps permettent d'identifier rapidement les tendances d'arsenal spécifiques à certains secteurs d'activité ou zones géographiques.
 
 ![Heatmap Outils vs Pays](resultat/analyse_outils_pays.png)
 ![Heatmap Outils vs Secteurs](resultat/analyse_outils_secteurs.png)
 
 ---
 
-### Visualisations 3D — `MCT.py` / `RFC.py` / `RMC.py`
+### Complexité de l'arsenal par secteur — `analyse_2.py`
 
-| Script | Axes | Output |
-|--------|------|--------|
-| `MCT.py` | Motivation / Nb cibles / Année | `html/motivation_signature_3d.html` |
-| `RFC.py` | Régime politique / Score GMI / Techniques MITRE | `html/visualization_3d.html` |
-| `RMC.py` | PIB / Score GMI / Complexité cyber | *(affichage direct)* |
+Analyse du nombre moyen d'outils utilisés par les groupes d'attaquants en fonction des secteurs d'activité ciblés. Seuls les secteurs significatifs (ciblés par plus de 5 acteurs) sont affichés.
+
+![Complexité de l'Arsenal par Secteur](resultat/complexite_secteurs.png)
+
+---
+
+### Profils géopolitiques (Attaques Lancées vs Subies) — `analyse_3.py`
+
+Comparaison des flux d'agression cyber pour les 15 pays les plus actifs, mettant en évidence leur rôle principal dans les conflits (en tant qu'État sponsor ou victime).
+
+![Flux d'agression Top 15](resultat/flux_agression_top15.png)
+
+---
+
+### 🌐 Visualisations 3D Interactives
+
+Nos scripts génèrent des graphiques tridimensionnels (exportés en HTML) pour explorer les relations complexes entre la géopolitique et les cybermenaces sous de multiples angles. Voici un aperçu des rendus :
+
+#### Le Triangle de la Puissance — `RMC.py`
+
+Cartographie l'impact de la puissance économique (PIB) et de la priorité militaire (GMI) sur la sophistication cyber (Complexité technique). Les couleurs permettent de distinguer rapidement les différents régimes politiques.
+
+<p align="center">
+  <img src="assets/RMC.gif" alt="Visualisation RMC" width="750">
+</p>
+
+---
+
+#### Analyse 4D : Régime, Force et Complexité — `RFC.py`
+
+Met en relation directe la nature du régime politique d'un État sponsor (de 0 = Autocratie fermée à 3 = Démocratie libérale) avec son indice de militarisation et l'arsenal technique déployé (nombre de techniques MITRE ATT&CK employées).
+
+<p align="center">
+  <img src="./assets/RFC.gif" alt="Visualisation RFC" width="750">
+</p>
+
+---
+
+#### Signature 4D et Temporalité — `MCT.py`
+
+Explore l'évolution temporelle des acteurs cyber (Année d'apparition) en croisant leur motivation principale (Espionnage, Profit financier, Sabotage...) et la surface de leur menace (Nombre de secteurs ciblés). *Ce script génère également un graphique radar de la distribution des motivations.*
+
+<p align="center">
+  <img src="./assets/MCT.gif" alt="Visualisation MCT" width="750">
+</p>
 
 ---
 

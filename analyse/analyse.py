@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def generate_tactical_signatures(file_path):
-    n = 20  # Nombre de top éléments à afficher pour la lisibilité (ne pas mettre trop haut pour éviter un graphique illisible)
+    n = 15  # Nombre de top éléments à afficher pour la lisibilité (ne pas mettre trop haut pour éviter un graphique illisible)
     # 1. Chargement des données
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)

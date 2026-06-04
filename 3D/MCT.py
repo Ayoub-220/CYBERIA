@@ -129,7 +129,7 @@ fig2 = go.Figure(data=[go.Scatter3d(
 )])
 
 fig2.update_layout(
-    title="Signature 3D: Motivation - Cibles - Temporalité",
+    title="Signature 4D: Motivation - Cibles - Temporalité",
     scene=dict(
         xaxis_title="Motivation (1=Inconnue → 3=Espionnage)",
         yaxis_title="Nombre de Secteurs Cibles",
