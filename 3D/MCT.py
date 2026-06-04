@@ -53,45 +53,7 @@ print(f"\nSecteurs cibles (Top 10):")
 for target, count in target_counts.most_common(10):
     print(f"  - {target}: {count}")
 
-# 2. Création du Radar Chart
-fig = go.Figure()
 
-# Données pour le radar
-categories = ['Espionnage', 'Vol/Profit', 'Sabotage', 'Cyber-crime', 'Hacktivisme']
-espionage_count = motivation_counts.get('Information theft and espionage', 0)
-profit_count = sum(1 for m in motivation_counts if 'financial' in m.lower() or 'theft' in m.lower())
-sabotage_count = sum(1 for m in motivation_counts if 'sabotage' in m.lower() or 'disruption' in m.lower())
-crime_count = sum(1 for m in motivation_counts if 'crime' in m.lower())
-activism_count = sum(1 for m in motivation_counts if 'activism' in m.lower() or 'hacktivis' in m.lower())
-
-values = [espionage_count, profit_count, sabotage_count, crime_count, activism_count]
-max_val = max(values) if values else 1
-
-fig.add_trace(go.Scatterpolar(
-    r=values,
-    theta=categories,
-    fill='toself',
-    name='Motivation Distribution',
-    line_color='#1f77b4',
-    fillcolor='rgba(31, 119, 180, 0.3)'
-))
-
-fig.update_layout(
-    polar=dict(
-        radialaxis=dict(
-            visible=True,
-            range=[0, max_val * 1.1]
-        )
-    ),
-    title="Signature de la Motivation - Distribution des Motivations Cyber",
-    showlegend=True,
-    font=dict(size=12),
-    height=700,
-    width=900
-)
-
-fig.write_html('html/motivation_radar.html')
-print(f"\n✓ Radar chart sauvegardé: motivation_radar.html")
 
 # 3. Visualisation 3D - Motivation vs Cibles vs Année
 fig2 = go.Figure()
@@ -144,5 +106,5 @@ fig2.update_layout(
 fig2.write_html('html/motivation_signature_3d.html')
 print(f"✓ Visualisation 3D sauvegardée: motivation_signature_3d.html\n")
 
-fig.show()
+
 fig2.show()
